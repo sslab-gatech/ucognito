@@ -1,0 +1,16 @@
+examined 158 bug reports related to private browsing, available at
+https://bugzilla.mozilla.org/buglist.cgi?product=Firefox&component=Private%20Browsing&resolution=---
+
+only 55 reports are closely related to our paper, rest of them including failure in test cases or privacy-related issues but not related to private browsing
+categorize them as following:
+
+
+										expectation															# reports			% reports				can we achieve?
+1. Users should be fully informed on traces shared between incognito session and normal session					17				30.91%					yes (in form of policy)
+2. Extensions should respect incognito session																	5				9.09%					yes (and better than their manual review)
+3. UX in incognito session should be consistent with UX in normal session										14				25.45%					yes (no browser logic is modified)
+4. Incognito mode should be optionally disabled due to parental control											4				7.27%					yes (but they can also achieve...)
+5. Incognito mode should be marked by clear UI indicators														9				16.36%					yes
+6. Incognito mode should be extended to other programs															1				1.81%					yes
+7. Incognito mode should be able to stop web tracking															5				9.09%					no (out of scope)
+

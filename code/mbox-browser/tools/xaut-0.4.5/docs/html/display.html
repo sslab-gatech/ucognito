@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!--
+ $URL: https://xautomation.svn.sourceforge.net/svnroot/xautomation/trunk/docs/html/display.html $
+ $Author: chris_parker $
+ $Date: 2012-06-30 07:29:19 -0700 (Sat, 30 Jun 2012) $
+ $Rev: 22 $
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="xaut.css">
+<title>Clipboard Commands</title>
+</head>
+<body>
+<div id="container">
+<div id="header">
+    <h1>XAUT (formerly X Automation)</h1>
+</div>
+<div id="links">
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="clipboard.html">Clipboard Functions</a></li>
+        <li class="current">Display Functions</li>
+        <li><a href="keyboard.html">Keyboard Functions</a></li>
+        <li><a href="mouse.html">Mouse Functions</a></li>
+        <li><a href="window.html">Window Functions</a></li>
+        <li><a href="other.html">Other Stuff</a></li>
+    </ul>
+</div>
+<div id="content">
+
+<h2>Display Object Functions</h2>
+<div class="synopsis">
+    <h3>Function Synopsis</h3>
+    <table class="synopsis_table">
+    <tr><th>Function</th><th>Brief Description</th></tr>
+    <tr>
+        <td><a href="#w">w()</a></td>
+        <td>The desktop's width at its current resolution.</td>
+    </tr>
+    <tr>
+        <td><a href="#h">h()</a></td>
+        <td>The desktop's height at its current resolution.</td>
+    </tr>
+    <tr>
+        <td><a href="#desktop">desktop([desk])</a></td>
+        <td>The current desktop.  If a value for desktop is supplied, then
+        the display changes to that desktop.</td>
+    </tr>
+    <tr>
+        <td class="bottom"><a href="#desktop_count">desktop_count()</a></td>
+        <td class="bottom">The number of desktops currently available</td>
+    </table>
+</div>
+<div class="command" id="w">
+    <div class="section desc">
+        <h3><a name="w">Function:</a></h3>
+        <p class="function">w()</p>
+        <p class="description">
+        The width of the desktop in pixels at the current resolution.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        (none)
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        The width of the desktop in pixels at the current resolution.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">import xaut
+disp = xaut.display()
+w = disp.w()
+print("The desktop is currently %d pixels wide") % (w)</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="h">
+    <div class="section desc">
+        <h3><a name="h">Function:</a></h3>
+        <p class="function">h()</p>
+        <p class="description">
+        The height of the desktop in pixels at the current resolution.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        (none)
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        The height of the desktop in pixels at the current resolution.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">import xaut
+disp = xaut.display()
+h = disp.h()
+print("The desktop is currently %d pixels tall") % (h)</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="desktop">
+    <div class="section desc">
+        <h3><a name="desktop">Function:</a></h3>
+        <p class="function">desktop([desk])</p>
+        <p class="description">
+        Get the current desktop.  If a value for desk is supplied,
+        then the display will change to that desktop and then return
+        that value.
+        </p>
+        <p class="description">
+        Note also that this software forces the desktop number to
+        be 1 based.  Which means that the valid desktops range
+        from 1 to desktop_count() inclusive.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">desk</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">The desktop to change to.</td>
+        </tr>
+    </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        The current desktop, which may or may not have changed.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Get the current desktop without making any changes
+import xaut
+disp = xaut.display()
+desk = disp.desktop()
+print("The current desktop is %d") % (desk)</pre>
+<pre class="example_code">#Change desktops
+#You need at least two desktops available
+import xaut
+import time
+disp = xaut.display()
+desk = disp.desktop()
+neu = 1
+print("Old desktop was %d") % (desk)
+if(desk == 1):
+    neu = desk + 1
+desk = disp.desktop(neu)
+while(disp.desktop() != neu):
+    pass
+print("Now we're at %d") % (desk)</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command last" id="desktop_count">
+    <div class="section desc">
+        <h3><a name="desktop_count">Function:</a></h3>
+        <p class="function">desktop_count()</p>
+        <p class="description">
+        Returns the number of desktops as currently configured.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        (none)
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        The current number of desktops.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">import xaut
+disp = xaut.display()
+count = disp.desktop_count()
+print("You have %d desktops") % (count)</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+
+</div><!-- /content -->
+<div id="footer">
+Click the image to go to the download page.&nbsp;
+<a href="http://sourceforge.net/projects/xautomation">
+    <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=255010&amp;type=15"
+    width="150" height="40"
+    alt="Get X Automation at SourceForge.net. Fast, secure and Free Open Source software downloads"></a>
+</div>
+</div><!-- /container -->
+
+</body>
+</html>

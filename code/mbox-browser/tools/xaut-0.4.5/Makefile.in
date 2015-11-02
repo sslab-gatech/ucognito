@@ -1,0 +1,139 @@
+# @configure_input@
+basedir = @srcdir@
+srcdir = $(basedir)/src
+VPATH = @srcdir@
+package = @PACKAGE_NAME@
+version = @PACKAGE_VERSION@
+tarname = $(package)
+distdir = $(tarname)-$(version)
+LOCAL_PYTHON_VERSION = @LOCAL_PYTHON_VERSION@
+
+#DO NOT add "$(MAKE) -C src $@" to this target!
+$(package): build link copy
+
+install:
+	cd python && python setup.py install
+
+clean: cleanup $(package)
+
+cleanup: clean_lib
+	$(MAKE) -C src $@ $+
+
+clean_lib:
+	@if test -f python/$(package)/_$(package)py*; \
+	then echo rm python/$(package)/_$(package)py*; \
+	rm python/$(package)/_$(package)py*; \
+	fi
+
+build:
+	$(MAKE) -C src $@ $+
+
+link: build
+	$(MAKE) -C src $@ $+
+
+copy: build link clean_lib
+	mv $(srcdir)/_$(package)py* python/
+	touch python/setup.py
+	@echo "from distutils.core import setup" > python/setup.py
+	@echo "from distutils.command.install import INSTALL_SCHEMES" >> python/setup.py
+	@echo "" >> python/setup.py
+	@echo "for scheme in INSTALL_SCHEMES.values():" >> python/setup.py
+	@echo "    scheme['data'] = scheme['purelib']" >> python/setup.py
+	@echo "" >> python/setup.py
+	@echo "setup(" >> python/setup.py
+	@echo "    name='$(package)'," >> python/setup.py
+	@echo "    version='$(version)'," >> python/setup.py
+	@echo "    description='Python library to manipulate X11 windows'," >> python/setup.py
+	@echo "    author='Chris Parker'," >> python/setup.py
+	@echo "    author_email='chrsprkr3@gmail.com'," >> python/setup.py
+	@echo "    url='http://xautomation.sourceforge.net'," >> python/setup.py
+	@echo "    license='Python License version 2.5 or later'," >> python/setup.py
+	@echo "    platforms='X11 only'," >> python/setup.py
+	@echo "    long_description='Simulate keystrokes, move windows, move the mouse, or manipulate the clipboard from Python'," >> python/setup.py
+	@echo "    py_modules=['$(package)']," >> python/setup.py
+	@echo "    data_files=[('', ['_$(package)py.so'])]" >> python/setup.py
+	@echo "    )" >> python/setup.py
+	@echo
+	@echo "********************************************************************************"
+	@echo xaut is ready for use.  Copy ./python/xaut.py and ./python/_xautpy.so
+	@echo to the same directory as your script.  There is also a setup file \'setup.py\'
+	@echo that you can use to install xaut into your Python install if you wish - even
+	@echo though I recommend against that.
+	@echo "********************************************************************************"
+	@echo
+
+dist: $(distdir).tar.gz
+
+test: build_test
+	-mkdir -p test
+	mv $(srcdir)/$(package)_test test
+	@echo
+	@echo
+	@echo "********************************************************************************"
+	@echo " Note that this only builds the test program - it does not run it."
+	@echo " Go into the test directory and execute $(package)_test to run the tests."
+	@echo "********************************************************************************"
+	@echo
+
+build_test:
+	$(MAKE) -C src $@ $+
+
+$(distdir).tar.gz: FORCE $(distdir)
+	tar chof - $(distdir) | gzip -9 -c >$(distdir).tar.gz
+	rm -rf $(distdir)
+
+$(distdir):
+	mkdir -p $(distdir)/src
+	cp configure $(distdir)
+	cp COPYRIGHT $(distdir)
+	cp Makefile.in $(distdir)
+	cp README $(distdir)
+	cp config.h.in $(distdir)
+	cp install-sh $(distdir)
+	cp $(srcdir)/config.h $(distdir)/src
+	cp $(srcdir)/main.c $(distdir)/src
+	cp $(srcdir)/Makefile.in $(distdir)/src
+	cp $(srcdir)/xaut.c $(distdir)/src
+	cp $(srcdir)/xaut.h $(distdir)/src
+	cp $(srcdir)/xaut_clipboard.c $(distdir)/src
+	cp $(srcdir)/xaut_clipboard.h $(distdir)/src
+	cp $(srcdir)/xaut_display.c $(distdir)/src
+	cp $(srcdir)/xaut_display.h $(distdir)/src
+	cp $(srcdir)/xaut_keyboard.c $(distdir)/src
+	cp $(srcdir)/xaut_keyboard.h $(distdir)/src
+	cp $(srcdir)/xaut_mouse.c $(distdir)/src
+	cp $(srcdir)/xaut_mouse.h $(distdir)/src
+	cp $(srcdir)/xautpy.i $(distdir)/src
+	cp $(srcdir)/xaut_types.h $(distdir)/src
+	cp $(srcdir)/xaut_window.c $(distdir)/src
+	cp $(srcdir)/xaut_window.h $(distdir)/src
+	mkdir -p $(distdir)/python/
+	cp $(basedir)/python/setup.py $(distdir)/python/
+	cp $(basedir)/python/xaut.py $(distdir)/python/
+	mkdir -p $(distdir)/docs/html
+	cp $(basedir)/docs/html/clipboard.html $(distdir)/docs/html
+	cp $(basedir)/docs/html/display.html $(distdir)/docs/html
+	cp $(basedir)/docs/html/index.html $(distdir)/docs/html
+	cp $(basedir)/docs/html/keyboard.html $(distdir)/docs/html
+	cp $(basedir)/docs/html/mouse.html $(distdir)/docs/html
+	cp $(basedir)/docs/html/other.html $(distdir)/docs/html
+	cp $(basedir)/docs/html/window.html $(distdir)/docs/html
+	cp $(basedir)/docs/html/xaut.css $(distdir)/docs/html
+	@echo Metadata-Version: 1.0 > $(distdir)/python/$(package)-$(version).egg-info
+	@echo Name: xaut>> $(distdir)/python/$(package)-$(version).egg-info
+	@echo Version: $(version)>> $(distdir)/python/$(package)-$(version).egg-info
+	@echo Summary: Python X window automation>> $(distdir)/python/$(package)-$(version).egg-info
+	@echo Home-page: http://xautomation.sourceforge.net>> $(distdir)/python/$(package)-$(version).egg-info
+	@echo Author: Chris Parker>> $(distdir)/python/$(package)-$(version).egg-info
+	@echo Author-email: chrsprkr3@gmail.com>> $(distdir)/python/$(package)-$(version).egg-info
+	@echo License: Python 2.5 or greater \(where compatible with OSI\)>> $(distdir)/python/$(package)-$(version).egg-info
+	@echo Description: Python library to manipulate X11 windows>> $(distdir)/python/$(package)-$(version).egg-info
+	@echo Platform: posix + X11 like window manager>> $(distdir)/python/$(package)-$(version).egg-info
+	@echo >> $(distdir)/python/$(package)-$(version).egg-info
+
+
+FORCE:
+	-rm $(distdir).tar.gz
+	-rm -rf $(distdir)
+
+.PHONY: $(package) dist FORCE clean

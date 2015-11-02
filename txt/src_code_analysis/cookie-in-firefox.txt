@@ -1,0 +1,84 @@
+Files:
+  netwerk/cookie/nsCookieService.h:157:
+  netwerk/cookie/nsCookieService.cpp:1245:
+
+###########################
+# Cookie: having 2 different status for private and normal DB for storing cookie.
+#         In privateState, it does not goes to the disk (as it says...)
+###########################
+Cookie DB
+    // we have two separate DB states: one for normal browsing and one for
+    // private browsing, switching between them on a per-cookie-request basis.
+    // this state encapsulates both the in-memory table and the on-disk DB.
+    // note that the private states' dbConn should always be null - we never
+    // want to be dealing with the on-disk DB when in private browsing.
+    DBState                      *mDBState;
+    nsRefPtr<DBState>             mDefaultDBState;
+    nsRefPtr<DBState>             mPrivateDBState;
+
+
+###
+  Initializing just init both DB
+###
+In void
+nsCookieService::InitDBStates()
+
+  // Create a new default DBState and set our current one.
+  mDefaultDBState = new DBState();
+  mDBState = mDefaultDBState;
+
+  mPrivateDBState = new DBState();
+
+
+###
+  How to choose private DB in private mode...
+###
+in  nsCookieService::SetCookieStringInternal()
+
+## Case 1
+mDBState = aIsPrivate ? mPrivateDBState : mDefaultDBState;
+
+## Case 2
+In nsCookieService::NotifyThirdParty()
+if (mDBState != mPrivateDBState) {
+  // Non-private
+} else {
+  // Private
+}
+
+
+In nsCookieService::NotifyChanged()
+
+#### Case 3
+
+  const char* topic = mDBState == mPrivateDBState ?
+      "private-cookie-changed" : "cookie-changed”;
+
+in nsCookieService::ImportCookies()
+  // Make sure we're in the default DB state. We don't want people importing
+  // cookies into a private browsing session!
+
+#### Case 4
+  if (mDBState != mDefaultDBState) {
+    NS_WARNING("Trying to import cookies in a private browsing session!");
+    return NS_ERROR_NOT_AVAILABLE;
+  }
+
+
+
+// Having both Default and Private DB could be possible.
+size_t
+nsCookieService::SizeOfIncludingThis(mozilla::MallocSizeOf aMallocSizeOf) const
+{
+  size_t n = aMallocSizeOf(this);
+
+  if (mDefaultDBState) {
+    n += mDefaultDBState->SizeOfIncludingThis(aMallocSizeOf);
+  }
+  if (mPrivateDBState) {
+    n += mPrivateDBState->SizeOfIncludingThis(aMallocSizeOf);
+  }
+
+  return n;
+}
+

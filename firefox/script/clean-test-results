@@ -1,0 +1,6 @@
+#!/bin/bash
+
+. ./settings.sh
+
+rm -rf $PROFILE_DIR/p-*
+rm -f $TRACE_LOG*

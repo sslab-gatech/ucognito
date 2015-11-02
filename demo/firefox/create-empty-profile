@@ -1,0 +1,6 @@
+#!/bin/bash
+
+. ./settings.sh
+
+mkdir -p $PROFILE_DIR
+$FIREFOX_BIN -CreateProfile "empty $PROFILE_EMPTY"

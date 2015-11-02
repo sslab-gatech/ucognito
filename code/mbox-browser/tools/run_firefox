@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+
+firefox = `which firefox`.strip
+if firefox == nil || firefox.length == 0
+  puts "ERROR: Firefox is not found!"
+  exit
+end
+
+cmd = "mbox -s #{ARGV.join ' '} -- #{firefox}"
+puts "Running command: #{cmd.inspect}"
+sleep 1
+system cmd

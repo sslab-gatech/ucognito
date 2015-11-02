@@ -1,0 +1,15 @@
+Makefile
+config.h
+config.log
+config.status
+python/_xautpy.so
+python/build/
+src/Makefile
+src/xaut.o
+src/xaut_clipboard.o
+src/xaut_display.o
+src/xaut_keyboard.o
+src/xaut_mouse.o
+src/xaut_window.o
+src/xautpy_wrap.c
+src/xautpy_wrap.o

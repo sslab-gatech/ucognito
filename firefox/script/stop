@@ -1,0 +1,9 @@
+#!/bin/bash
+
+. ./settings.sh
+
+PID=$(ps -o pid -C firefox | tail -1 | xargs)
+
+kill -SIGTERM $PID
+
+rm -r $PROFILE_PBTEST

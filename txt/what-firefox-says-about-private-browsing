@@ -1,0 +1,32 @@
+What does Private Browsing not save?
+
+    Visited pages
+
+      No pages will be added to the list of sites in the History menu, the
+      Library window's history list, or the Awesome Bar address list.  Form and
+      Search Bar entries: Nothing you enter into text boxes on web pages or the
+      Search bar will be saved for Form autocomplete.
+
+    Passwords
+      No new passwords will be saved.
+    Download List entries
+      No files you download will be listed in the Downloads Window after you
+      turn off Private Browsing.
+    Cookies
+      Cookies store information about websites you visit such as site
+      preferences, login status, and data used by plugins like Adobe Flash.
+      Cookies can also be used by third parties to track you across websites.
+      For more info about tracking, see How do I turn on the Do Not Track
+      feature?
+    Cached Web Content and Offline Web Content and User Data
+      No temporary Internet files (cached files) or files that websites save
+      for offline use will be saved.
+
+Note:
+
+    New bookmarks you create while using Private Browsing will be saved.
+    Any files you download to your computer while using Private Browsing will
+    be saved.  Firefox Hello is not available in Private Browsing.
+
+
+

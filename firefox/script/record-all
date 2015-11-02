@@ -1,0 +1,11 @@
+#!/bin/bash
+
+. ./settings.sh
+
+i=0
+while read line
+do
+	echo "visiting website $i"
+	./record-$1 $line $i
+	i=$(($i+1))
+done < $URL_LIST

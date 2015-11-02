@@ -1,0 +1,5 @@
+#!/bin/bash
+
+. ./settings.sh
+
+$FIREFOX_BIN -new-window $1 1>/dev/null 2>&1 &

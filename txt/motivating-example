@@ -1,0 +1,16 @@
+following are examples that violates the trace-hiding goal
+in "incognito" mode:
+
+1. HSTS supercookie - works on chrome, not on firefox
+http://www.radicalresearch.co.uk/lab/hstssupercookies
+
+2. ETag - works on both chrome and firefox
+http://lucb1e.com/rp/cookielesscookies/
+
+Both can be blocked with our MBox approach, thus serves as
+perfect motivating examples!
+
+There is potentially a third way to track user with the <KEYGEN>
+html tag. This is based on the fact that browser will store 
+cert and keys in private browsing session without deleting them.
+But we might need manual construction of the html form to prove it.

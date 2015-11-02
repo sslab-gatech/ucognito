@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+cmd = "mbox -s #{ARGV.join ' '}"
+sleep 1
+system cmd

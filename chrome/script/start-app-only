@@ -1,0 +1,6 @@
+#!/bin/bash
+
+. ./settings.sh
+
+cp -r $PROFILE_EMPTY $PROFILE_PBTEST
+$CHROME_BIN --user-data-dir=$PROFILE_PBTEST --app-id=$1 1>/dev/null 2>&1 &

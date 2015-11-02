@@ -1,0 +1,333 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!--
+ $URL: https://xautomation.svn.sourceforge.net/svnroot/xautomation/trunk/docs/html/clipboard.html $
+ $Author: chris_parker $
+ $Date: 2012-08-03 20:25:59 -0700 (Fri, 03 Aug 2012) $
+ $Rev: 26 $
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="xaut.css">
+<title>Clipboard Commands</title>
+</head>
+<body>
+<div id="container">
+<div id="header">
+    <h1>XAUT (formerly X Automation)</h1>
+</div>
+<div id="links">
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li class="current">Clipboard Functions</li>
+        <li><a href="display.html">Display Functions</a></li>
+        <li><a href="keyboard.html">Keyboard Functions</a></li>
+        <li><a href="mouse.html">Mouse Functions</a></li>
+        <li><a href="window.html">Window Functions</a></li>
+        <li><a href="other.html">Other Stuff</a></li>
+    </ul>
+</div>
+<div id="content">
+<div class="command">
+    <h2>X11 Clipboard Discussion</h2>
+    <p>If you are a Windows user, you may not understand how the X11 &quot;clipboard&quot; works.
+    Before telling you about the clipboard functions in XAUT, I'd like to discuss how you can expect the
+    XAUT commands to work.</p>
+    <p>The first important point regards why I put scare quotes around the word &quot;clipboard&quot; in
+    the previous paragraph.  In X11, data that can be copy/pasted or drag/dropped, or whatever, are
+    called &quot;selections.&quot;  The clipboard is one type of selection, but it is not the only type.
+    Generally speaking, there are two selections that you will encounter&#151;the primary selection
+    and the clipboard selection.</p>
+    <p><em>Primary Selection:</em> The primary selection changes whenever you highlight text.  You do not
+    need to explicitly copy it to the &quot;clipboard&quot;, it's available as soon as you are done selecting.
+    If you select something else somewhere else, then the first selection is gone.  In fact, in a well-behaved
+    client, any selected content will immediately become deselected when you select something else, even
+    if that selection is in another program.  An example: I use SciTE as my windowed editor daily.  I have
+    SciTE setup such that if I type ctrl + f, it will often times select the text where my cursor is sitting and
+    use that as the search term.  So imagine I have a terminal open and I select text without doing anything
+    else.  That selection is now my primary selection.  Now suppose I alt + tab to SciTE and hit ctrl + f.
+    SciTE will select the text where my cursor is and bring up the find dialog.  In addition to that, the
+    content in the terminal window will cease to be selected.</p>
+    <p><em>Clipboard Selection:</em> The clipboard selection is intended to work like the &quot;clipboard&quot;
+    in that popular operating system.  One must take an explicit action to put content there&#151;typically
+    a key combination (e.g. ctrl + c), or a menu choice (e.g. Edit-&gt;Copy).</p>
+    <p>X11 does not access or store the data at all, it simply knows who has it.  If a program requests that
+    data, then X11 passes on the request to the proper program.  The program requesting the
+    data and the program which is holding the data negotiate the data type.  If the two programs have
+    no data type in common (think copy image in image editor, try to paste into text editor), then
+    nothing pastes.</p>
+    <p>In its current iteration, XAUT knows about text.  That's it.  So you can put text into a selection,
+    you can get text out of a selection.  Trying to get the data from e.g. an image will almost certainly
+    return nothing at all.</p>
+    <p>Another important point is that XAUT creates an invisible window which holds content you
+    put into a selection.  That window stays in the background servicing any request for data until
+    another program asks for control of the selection.  So basically the final bits of your script may
+    not exit until you copy data in another program.</p>
+    <p>Finally, there is another selection type I have not yet mentioned&#151;the secondary
+    selection.  I have included this in XAUT for completeness sake, but this is <em>very</em>
+    uncommonly used.  In fact, I do not know of even one other program that allows access to
+    the secondary selection.  It would be pretty surprising if using <em>get_secondary</em>
+    would return any values, and if you were to put any content there, then it's likely the
+    hidden window will last until forceably killed.  So basically the secondary selection
+    is there if you need it, but be sure you know what you are doing before you do use it!</p>
+</div>
+
+<h2>Clipboard Object Functions</h2>
+<div class="synopsis">
+    <h3>Function Synopsis</h3>
+    <table class="synopsis_table">
+    <tr><th>Function</th><th>Brief Description</th></tr>
+    <tr>
+        <td><a href="#get_primary">get_primary()</a></td>
+        <td>Gets the current data in the primary selection.</td>
+    </tr>
+    <tr>
+        <td><a href="#get_secondary">get_secondary()</a></td>
+        <td>Gets the current data in the secondary selection.</td>
+    </tr>
+    <tr>
+        <td><a href="#get_clipboard">get_clipboard()</a></td>
+        <td>Gets the current data in the clipboard selection.</td>
+    </tr>
+    <tr>
+        <td><a href="#put_primary">put_primary(str)</a></td>
+        <td>Puts data into the primary selection.</td>
+    </tr>
+    <tr>
+        <td><a href="#put_secondary">put_secondary(str)</a></td>
+        <td>Puts data into the secondary selection.</td>
+    </tr>
+    <tr>
+        <td class="bottom"><a href="#put_clipboard">put_clipboard(str)</a></td>
+        <td class="bottom">Puts data into the clipboard selection.</td>
+    </tr>
+    </table>
+</div>
+<div class="command" id="get_primary">
+    <div class="section desc">
+        <h3><a name="get_primary">Function:</a></h3>
+        <p class="function">get_primary()</p>
+        <p class="description">
+        Gets the current data in the primary selection.
+        Note that the data currently in the primary selection
+        must be text or compatible with text, otherwise the
+        program will return null.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        (none)
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        The data in the primary selection.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">import xaut
+cb = xaut.clipboard()
+primary = cb.get_primary()
+print("The primary content was %s") % (primary)</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="get_secondary">
+    <div class="section desc">
+        <h3><a name="get_secondary">Function:</a></h3>
+        <p class="function">get_secondary()</p>
+        <p class="description">
+        Gets the current data in the secondary selection.
+        Note that the data currently in the secondary selection
+        must be text or compatible with text, otherwise the
+        program will return null.
+        </p>
+        <p class="description">
+        Note also that it is <em>very</em> uncommon to use
+        the secondary selection.  It's highly likely that this function
+        will return nothing at all.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        (none)
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        The data in the secondary selection.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">import xaut
+cb = xaut.clipboard()
+secondary = cb.get_secondary()
+print("The secondary content was %s") % (secondary)</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="get_clipboard">
+    <div class="section desc">
+        <h3><a name="get_clipboard">Function:</a></h3>
+        <p class="function">get_clipboard()</p>
+        <p class="description">
+        Gets the current data in the clipboard selection.
+        Note that the data currently in the clipboard selection
+        must be text or compatible with text, otherwise the
+        program will return null.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        (none)
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        The data in the clipboard selection.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">import xaut
+cb = xaut.clipboard()
+clip = cb.get_clipboard()
+print("The clipboard content was %s") % (clip)</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+
+<div class="command" id="put_primary">
+    <div class="section desc">
+        <h3><a name="put_primary">Function:</a></h3>
+        <p class="function">put_primary(str)</p>
+        <p class="description">
+        Puts current data into the primary selection.
+        Note that the data passed must be text.
+        </p>
+        <p class="description">
+        Note also that most programs will lose their selection
+        when this function is called.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">str</td>
+            <td class="req bottom">yes</td>
+            <td class="desc bottom">The text to put into the selection.</td>
+        </tr>
+    </table>
+  </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        (none)
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">import xaut
+cb = xaut.clipboard()
+cb.put_primary("This content came from XAUT")</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="put_secondary">
+    <div class="section desc">
+        <h3><a name="put_secondary">Function:</a></h3>
+        <p class="function">put_secondary(str)</p>
+        <p class="description">
+        Puts current data into the secondary selection.
+        Note that the data passed must be text.
+        </p>
+        <p class="description">
+        Note also that it is <em>extremely</em> unusual for a program
+        to use the secondary selection.  It's likely that if you use this, all
+        that will happen is that you create a hidden window that doesn't
+        go away until killed forceably.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">str</td>
+            <td class="req bottom">yes</td>
+            <td class="desc bottom">The text to put into the selection.</td>
+        </tr>
+    </table>
+  </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        (none)
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">import xaut
+cb = xaut.clipboard()
+cb.put_secondary("This content came from XAUT")</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="put_clipboard">
+    <div class="section desc">
+        <h3><a name="put_clipboard">Function:</a></h3>
+        <p class="function">put_clipboard(str)</p>
+        <p class="description">
+        Puts current data into the clipboard selection.
+        Note that the data passed must be text.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">str</td>
+            <td class="req bottom">yes</td>
+            <td class="desc bottom">The text to put into the selection.</td>
+        </tr>
+    </table>
+  </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        (none)
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">import xaut
+cb = xaut.clipboard()
+cb.put_clipboard("This content came from XAUT")</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+
+
+</div><!-- /content -->
+<div id="footer">
+Click the image to go to the download page.&nbsp;
+<a href="http://sourceforge.net/projects/xautomation">
+    <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=255010&amp;type=15"
+    width="150" height="40"
+    alt="Get X Automation at SourceForge.net. Fast, secure and Free Open Source software downloads"></a>
+</div>
+</div><!-- /container -->
+
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!--
+ $URL: https://xautomation.svn.sourceforge.net/svnroot/xautomation/trunk/docs/html/other.html $
+ $Author: chris_parker $
+ $Date: 2012-06-30 07:29:19 -0700 (Sat, 30 Jun 2012) $
+ $Rev: 22 $
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="xaut.css">
+<title>Other Commands</title>
+</head>
+<body>
+<div id="container">
+<div id="header">
+    <h1>XAUT (formerly X Automation)</h1>
+</div>
+<div id="links">
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="clipboard.html">Clipboard Functions</a></li>
+        <li><a href="display.html">Display Functions</a></li>
+        <li><a href="keyboard.html">Keyboard Functions</a></li>
+        <li><a href="mouse.html">Mouse Functions</a></li>
+        <li><a href="window.html">Window Functions</a></li>
+        <li class="current">Other Stuff</li>
+    </ul>
+</div>
+<div id="content">
+
+<h2>Other Functions</h2>
+<div class="synopsis">
+    <h3>Function Synopsis</h3>
+    <table class="synopsis_table">
+    <tr><th>Function</th><th>Brief Description</th></tr>
+    <tr>
+        <td><a href="#cleanup">cleanup()</a></td>
+        <td>Release all resources allocated by xaut.</td>
+    </tr>
+    <tr>
+        <td><a href="#init_defaults">init_defaults()</a></td>
+        <td>Initialize (or reinitialize) default values.</td>
+    <tr>
+        <td><a href="#verbose">verbose([tf])</a></td>
+        <td>Cause xaut to print messages to the console.</td>
+    </tr>
+    <tr>
+        <td><a href="#extra_verbose">extra_verbose([tf])</a></td>
+        <td>Cause xaut to print <em>lots</em> of messages to the console.</td>
+    </tr>
+    </table>
+</div>
+<div class="command" id="cleanup">
+    <div class="section desc">
+        <h3><a name="cleanup">Function:</a></h3>
+        <p class="function">cleanup()</p>
+        <p class="description">
+        Releases the resources used by xaut.  Note that
+        it is not normally required to call this function, but
+        it may help in the event that resources are limited
+        and xaut is no longer needed.  The resources are
+        always released when the python prompt which imported
+        xaut exits.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        (none)
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        (none)
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#We're going to allocate resources inside a function on purpose
+def test():
+    import xaut
+    kbd = xaut.keyboard()
+    kbd.type("foo bar")
+    xaut.cleanup()
+
+test()
+#xaut is no longer using memory</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="init_defaults">
+    <div class="section desc">
+        <h3><a name="init_defaults">Function:</a></h3>
+        <p class="function">init_defaults()</p>
+        <p class="description">
+        Initializes (or reinitializes) xaut default values.
+        It is not normally necessary to call this function
+        before use of xaut, since it is called internally before
+        any action which requires valid defaults.  Probably
+        the best reason to use this would be to reset all
+        remembered values back to defaults after making
+        changes.  E.g. if you have set the mouse move
+        delay, you can reset it to default by calling this.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        (none)
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        (none)
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Set a few values to weird things, then clean up
+import xaut
+xaut.verbose()
+xaut.extra_verbose()
+mouse = xaut.mouse()
+mouse.move_delay(100)
+mouse.down_delay(100)
+mouse.click_delay(100)
+xaut.init_defaults()
+        </pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="verbose">
+    <div class="section desc">
+        <h3><a name="verbose">Function:</a></h3>
+        <p class="function">verbose([tf])</p>
+        <p class="description">
+        When true, xaut prints information to the console about
+        what it is doing.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">tf</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">Non zero means true, everything else means false.  Assumes true if no value is supplied.</td>
+        </tr>
+    </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        (none)
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Show information about the window search
+import xaut
+xaut.verbose() #Note the lack of flag
+win = xaut.window.find_window("foo")
+xaut.verbose(0) #Turns off verbose
+win = xaut.window.find_window("foo")
+xaut.verbose(1) #Using a flag this time
+win = xaut.window.find_window("foo")</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="extra_verbose">
+    <div class="section desc">
+        <h3><a name="extra_verbose">Function:</a></h3>
+        <p class="function">extra_verbose()</p>
+        <p class="description">
+        When true, xaut prints <em>lots</em> of information about what it
+        is doing.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">tf</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">Non zero means true, everything else means false.  Assumes true if no value is supplied.</td>
+        </tr>
+    </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        (none)
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Show LOTS of information about the window search
+import xaut
+xaut.extra_verbose() #Note the lack of flag
+win = xaut.window.find_window("foo")
+xaut.extra_verbose(0) #Turns off extra_verbose
+win = xaut.window.find_window("foo")
+xaut.extra_verbose(1) #Using a flag this time
+win = xaut.window.find_window("foo")</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+
+</div><!-- /content -->
+<div id="footer">
+Click the image to go to the download page.&nbsp;
+<a href="http://sourceforge.net/projects/xautomation">
+    <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=255010&amp;type=15"
+    width="150" height="40"
+    alt="Get X Automation at SourceForge.net. Fast, secure and Free Open Source software downloads"></a>
+</div>
+</div><!-- /container -->
+</body>
+</html>

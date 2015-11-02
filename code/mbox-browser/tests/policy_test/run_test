@@ -1,0 +1,6 @@
+#!/bin/bash
+
+make clean
+make
+
+mbox -P profile.cfg -- ./pt

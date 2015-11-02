@@ -1,0 +1,100 @@
+1. in chromium, most things related to user profile are termed "service", 
+including cookie management, browsing history recording, caching etc.
+
+2. each profile is bounded to a set of services, registered through
+the constructor of ProfileImpl, io_data_(this)
+
+/chrome/browser/profiles/profile_impl.cc, line 599
+
+ io_data_.Init(cookie_path, channel_id_path, cache_path,
+                cache_max_size, media_cache_path, media_cache_max_size,
+                extensions_cookie_path, GetPath(), predictor_,
+                session_cookie_mode, GetSpecialStoragePolicy(),
+                CreateDomainReliabilityMonitor(local_state));
+
+/chrome/browser/profiles/profile_impl_io_data.cc, line 143
+
+void ProfileImplIOData::Handle::Init(
+    const base::FilePath& cookie_path,
+    const base::FilePath& channel_id_path,
+    const base::FilePath& cache_path,
+    int cache_max_size,
+    const base::FilePath& media_cache_path,
+    int media_cache_max_size,
+    const base::FilePath& extensions_cookie_path,
+    const base::FilePath& profile_path,
+    chrome_browser_net::Predictor* predictor,
+    content::CookieStoreConfig::SessionCookieMode session_cookie_mode,
+    storage::SpecialStoragePolicy* special_storage_policy,
+    scoped_ptr<domain_reliability::DomainReliabilityMonitor>
+        domain_reliability_monitor)
+
+For normal profile, i.e., in ProfileImpl, cookie store is set to
+PERSISTANT_SESSION_COOKIES as default setting
+
+/chrome/browser/profiles/profile_impl.cc, line 589
+
+  content::CookieStoreConfig::SessionCookieMode session_cookie_mode =
+      content::CookieStoreConfig::PERSISTANT_SESSION_COOKIES;
+
+
+
+3. "incognito" mode is abstracted as OffTheRecordProfileImpl, 
+a subclass of the Profile class, available at 
+/chrome/browser/profiles/off_the_record_profile_impl.cc
+And can be derived from a normal profile by: 
+
+/chrome/browser/profiles/profile_impl.cc, line 745
+
+Profile* ProfileImpl::GetOffTheRecordProfile() {
+  if (!off_the_record_profile_) {
+    scoped_ptr<Profile> p(CreateOffTheRecordProfile());
+    off_the_record_profile_.swap(p);
+
+    content::NotificationService::current()->Notify(
+        chrome::NOTIFICATION_PROFILE_CREATED,
+        content::Source<Profile>(off_the_record_profile_.get()),
+        content::NotificationService::NoDetails());
+  }
+  return off_the_record_profile_.get();
+}
+
+Such "incognito" profile is initialized by (use cookie as example):
+
+/chrome/browser/profiles/off_the_record_profile_io_data.cc, line 198
+
+void OffTheRecordProfileIOData::InitializeInternal(
+...
+  using content::CookieStoreConfig;
+  main_context->set_cookie_store(
+      CreateCookieStore(CookieStoreConfig(
+          base::FilePath(),
+          CookieStoreConfig::EPHEMERAL_SESSION_COOKIES,
+          NULL,
+          profile_params->cookie_monster_delegate.get())));
+
+
+CookieStoreConfig is set to EPHEMERAL_SESSION_COOKIES
+meaning that cookies will not be persisted on disk.
+This is defined in:
+/content/public/browser/cookie_store_factory.h, line 42
+
+struct CONTENT_EXPORT CookieStoreConfig {
+  // Specifies how session cookies are persisted in the backing data store.
+  //
+  // EPHEMERAL_SESSION_COOKIES specifies session cookies will not be written
+  // out in a manner that allows for restoration.
+  //
+  // PERSISTANT_SESSION_COOKIES specifies that session cookies are not restored
+  // when the cookie store is opened, however they will be written in a manner
+  // that allows for them to be restored if the cookie store is opened again
+  // using RESTORED_SESSION_COOKIES.
+  //
+  // RESTORED_SESSION_COOKIES is the: same as PERSISTANT_SESSION_COOKIES
+  // except when the cookie store is opened, the previously written session
+  // cookies are loaded first.
+  enum SessionCookieMode {
+    EPHEMERAL_SESSION_COOKIES,
+    PERSISTANT_SESSION_COOKIES,
+    RESTORED_SESSION_COOKIES
+  };

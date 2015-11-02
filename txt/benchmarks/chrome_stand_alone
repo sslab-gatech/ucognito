@@ -1,0 +1,91 @@
+Ocatne
+	27266
+
+DROMAEO
+	3d mesh	1361.12
+	3D ray	1259.46
+	AES	1482.74
+	Arrays	2106.38
+
+
+===============================================
+RESULTS (means and 95% confidence intervals)
+-----------------------------------------------
+Total:                       1108.6ms +/- 0.5%
+-----------------------------------------------
+
+  ai:                         155.2ms +/- 1.0%
+    astar:                    155.2ms +/- 1.0%
+
+  audio:                      319.1ms +/- 2.9%
+    beat-detection:           113.9ms +/- 4.7%
+    dft:                       84.1ms +/- 0.6%
+    fft:                       63.8ms +/- 7.4%
+    oscillator:                57.3ms +/- 1.3%
+
+  imaging:                    291.0ms +/- 1.2%
+    gaussian-blur:             84.4ms +/- 2.9%
+    darkroom:                 120.7ms +/- 0.5%
+    desaturate:                85.9ms +/- 1.1%
+
+  json:                        70.6ms +/- 1.2%
+    parse-financial:           47.3ms +/- 2.0%
+    stringify-tinderbox:       23.3ms +/- 1.5%
+
+  stanford:                   272.7ms +/- 3.2%
+    crypto-aes:                54.7ms +/- 13.9%
+    crypto-ccm:                78.4ms +/- 2.7%
+    crypto-pbkdf2:             92.4ms +/- 4.6%
+    crypto-sha256-iterative:   47.2ms +/- 3.6%
+
+
+
+============================================
+RESULTS (means and 95% confidence intervals)
+--------------------------------------------
+Total:                 173.1ms +/- 0.8%
+--------------------------------------------
+
+  3d:                   32.4ms +/- 2.4%
+    cube:               10.5ms +/- 3.6%
+    morph:              11.9ms +/- 4.4%
+    raytrace:           10.0ms +/- 0.0%
+
+  access:               12.6ms +/- 2.9%
+    binary-trees:        1.0ms +/- 0.0%
+    fannkuch:            6.0ms +/- 0.0%
+    nbody:               2.7ms +/- 12.8%
+    nsieve:              2.9ms +/- 7.8%
+
+  bitops:                9.9ms +/- 2.3%
+    3bit-bits-in-byte:   1.0ms +/- 0.0%
+    bits-in-byte:        3.0ms +/- 0.0%
+    bitwise-and:         2.9ms +/- 7.8%
+    nsieve-bits:         3.0ms +/- 0.0%
+
+  controlflow:           1.1ms +/- 20.5%
+    recursive:           1.1ms +/- 20.5%
+
+  crypto:               13.7ms +/- 3.5%
+    aes:                 5.6ms +/- 6.6%
+    md5:                 4.1ms +/- 5.5%
+    sha1:                4.0ms +/- 0.0%
+
+  date:                 19.9ms +/- 2.6%
+    format-tofte:        9.3ms +/- 3.7%
+    format-xparb:       10.6ms +/- 3.5%
+
+  math:                 14.0ms +/- 0.0%
+    cordic:              3.0ms +/- 0.0%
+    partial-sums:        9.0ms +/- 0.0%
+    spectral-norm:       2.0ms +/- 0.0%
+
+  regexp:                6.0ms +/- 0.0%
+    dna:                 6.0ms +/- 0.0%
+
+  string:               63.5ms +/- 0.6%
+    base64:              6.0ms +/- 0.0%
+    fasta:              12.0ms +/- 0.0%
+    tagcloud:           20.0ms +/- 0.0%
+    unpack-code:        17.6ms +/- 2.1%
+    validate-input:      7.9ms +/- 2.9%

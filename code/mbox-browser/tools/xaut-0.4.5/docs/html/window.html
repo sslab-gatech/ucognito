@@ -1,0 +1,1498 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="xaut.css">
+<title>Window Commands</title>
+</head>
+<body>
+<div id="container">
+<div id="header">
+    <h1>XAUT (formerly X Automation)</h1>
+</div>
+<div id="links">
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="clipboard.html">Clipboard Functions</a></li>
+        <li><a href="display.html">Display Functions</a></li>
+        <li><a href="keyboard.html">Keyboard Functions</a></li>
+        <li><a href="mouse.html">Mouse Functions</a></li>
+        <li class="current">Window Functions</li>
+        <li><a href="other.html">Other Stuff</a></li>
+    </ul>
+</div>
+<div id="content">
+<h2>Window Object Functions</h2>
+<div class="synopsis">
+    <h3>Function Synopsis</h3>
+    <table class="synopsis_table">
+    <tr><th>Function</th><th>Brief Description<br>(<span id="static_desc" class="static">tinted functions are static</span>)</th></tr>
+    <tr class="static">
+        <td><a href="#active_window">active_window()</a></td>
+        <td>Return a handle to the currently active window.</td>
+    </tr>
+    <tr class="static">
+        <td><a href="#find_window">find_window(str)</a></td>
+        <td>Find a window based on its title. It should be noted that the
+        search returns the "most likely" window when more than one match
+        is found.</td>
+    </tr>
+    <tr class="static">
+        <td><a href="#search_for_window">search_for_window(str)</a></td>
+        <td>Perform a deep search for all windows which match the name given.</td>
+    </tr>
+    <tr class="static">
+        <td><a href="#wait_exists">wait_exists(str[,&nbsp;timeout])</a></td>
+        <td>Wait until a window exists, and then return a handle to it.</td>
+    </tr>
+    <tr>
+    	<td><a href="#find_outer_parent">find_outer_parent()</a></td>
+    	<td> Finds the outer parent of a window.</td>
+    </tr>
+    <tr>
+        <td><a href="#is_valid">is_valid()</a></td>
+        <td>Boolean check to see if a current window handle is valid.</td>
+    </tr>
+    <tr>
+    	<td><a href="#is_active">is_active()</a></td>
+    	<td>Boolean check to see if a current window is the active window.</td>
+    </tr>
+    <tr>
+        <td><a href="#activate">activate()</a></td>
+        <td>Activate the window.</td>
+    </tr>
+    <tr>
+        <td><a href="#maximize">maximize([tf])</a></td>
+        <td>Maximize the window horizontally and vertically.</td>
+    </tr>
+    <tr>
+        <td><a href="#maximize_horz">maximize_horz([tf])</a></td>
+        <td>Make a window full width without modifying its height.</td>
+    </tr>
+    <tr>
+        <td><a href="#maximize_vert">maximize_vert([tf])</a></td>
+        <td>Make a window full height without changing its width.</td>
+    </tr>
+    <tr>
+        <td><a href="#minimize">minimize([tf])</a></td>
+        <td>Minimize a window to the system tray. A synonym for "iconify".</td>
+    </tr>
+    <tr>
+        <td><a href="#iconify">iconify([tf])</a></td>
+        <td>Iconify a window to the system tray.  A synonym for "minimize".</td>
+    </tr>
+    <tr>
+        <td><a href="#full_screen">full_screen([tf])</a></td>
+        <td>Make a window full screen.</td>
+    </tr>
+    <tr>
+        <td><a href="#restore">restore()</a></td>
+        <td>Restore a window to its "natural" state.</td>
+    </tr>
+    <tr>
+        <td><a href="#shade">shade([tf])</a></td>
+        <td>Shade a window.</td>
+    </tr>
+    <tr>
+        <td><a href="#move">move(x, y[,&nbsp;desk])</a></td>
+        <td>Move a window to the coordinates supplied, and potentially to a different virtual desktop.</td>
+    </tr>
+    <tr>
+        <td><a href="#resize">resize(x, y)</a></td>
+        <td>Change the inside dimensions of the specified window, not including its borders.</td>
+    </tr>
+    <tr>
+        <td><a href="#x">x()</a></td>
+        <td>Retrieve the window's current x coordinate.</td>
+    </tr>
+    <tr>
+        <td><a href="#y">y()</a></td>
+        <td>Retrieve the window's current y coordinate.</td>
+    </tr>
+    <tr>
+        <td><a href="#w">w()</a></td>
+        <td>Retrieve the window's current width.</td>
+    </tr>
+    <tr>
+        <td><a href="#h">h()</a></td>
+        <td>Retrieve the window's current height.</td>
+    </tr>
+    <tr>
+        <td><a href="#name">name()</a></td>
+        <td>Retreive the window's title/name.</td>
+    </tr>
+    <tr>
+        <td><a href="#desktop">desktop()</a></td>
+        <td>Retrieve the window's current desktop number.</td>
+    </tr>
+    <tr>
+        <td><a href="#info">info()</a></td>
+        <td>All window info in a tuple (x, y, w, h, name, desktop, id).</td>
+    </tr>
+    <tr>
+        <td class="bottom"><a href="#wait_active">wait_active([timeout])</a></td>
+        <td class="bottom">Wait until this window is the active window.</td>
+    </table>
+</div>
+<div class="command static" id="active_window">
+    <div class="section desc">
+        <h3><a name="active_window">Static Function:</a></h3>
+        <p class="function">active_window()</p>
+        <p class="description">
+        Returns a handle to the active window.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        None
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        The currently active window.  Will only return None
+        if there are <em>no</em> active windows.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">import xaut
+win = xaut.window.active_window()
+print("The active window is: %s" %
+    win.name())</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+
+<div class="command static" id="find_window">
+    <div class="section desc">
+        <h3><a name="find_window">Static Function:</a></h3>
+        <p class="function">find_window(title)</p>
+        <p class="description">
+        Attempts to find a window based on title from among the open
+        windows on the computer.  Note that this search is not a deep
+        search, so hidden windows will not be found.  For example,
+        applications which reside in the system tray will typically
+        not be found.
+        </p>
+        <p class="description">
+        The search engine uses a regular expression library,
+        so be sure the search term is compatible.
+        </p>
+        <p class="description">
+        It should be noted that the search returns the "most likely" window
+        when more than one match is found.  The criteria is based on two
+        factors:
+        </p>
+        <ul>
+        <li><em>The window's desktop.</em> The absolute difference between
+        the current desktop and each of the window's desktops is calculated.
+        If the values are different, then the lesser of the two is chosen.</li>
+        <li><em>The window's identity.</em> The window with the lower
+        id value is chosen, since (presumably) the lesser of the two
+        is the older of the two.</li>
+        </ul>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">str</td>
+            <td class="req bottom">yes</td>
+            <td class="desc bottom">The search term.</td>
+        </tr>
+    </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        A single window handle to the most likely window (if it exists),
+        or None if nothing matches at all.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Get a handle to the konsole application
+import xaut
+win = xaut.window.find_window( "Shell - Konsole")
+print(win.info())</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command static" id="search_for_window">
+    <div class="section desc">
+        <h3><a name="search_for_window">Static Function:</a></h3>
+        <p class="function">search_for_window(title)</p>
+        <p class="description">
+        Performs a deep recursive search for windows by name.  The most
+        likely use of this function would be to find one of the windows
+        rejected by the sorting criteria used by find_window.  This
+        function is several orders of magnitude slower than find - so
+        it should only be called when absolutely necessary.
+        </p>
+        <p class="description">
+        It is possible to use this function to find windows that are hidden or
+        invisible.  Beware: Windows which are hidden do not necessarily behave
+        like "normal" windows.  It's a good idea to make sure that what
+        you are trying to do will work properly on a test system before
+        modifying a hidden window.  <em>You have been warned.</em>
+        </p>
+        <p class="description">
+        The search engine uses a regular expression library,
+        so be sure the search term is compatible.
+        </p>
+        <p class="description">
+        It should be noted that the search pre sorts the array to where
+        the "most likely" window has a lower index when more than one
+        match is found.  The criteria is based on two factors:
+        </p>
+        <ul>
+        <li><em>The window's desktop.</em> The absolute difference between
+        the current desktop and each of the window's desktops is calculated.
+        If the values are different, then the lesser of the two is chosen.</li>
+        <li><em>The window's identity.</em> The window with the lower
+        id value is chosen, since (presumably) the lesser of the two
+        is the older of the two.</li>
+        </ul>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">name</td>
+            <td class="req bottom">yes</td>
+            <td class="desc bottom">The search term</td>
+        </tr>
+    </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        An array of windows which match the search name.  The
+        array is sorted from most likely to least likely based
+        on the criteria described above.  If there are no matches at
+        all, then you will get an empty array.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Get a handle to all konsole application instances
+import xaut
+all = xaut.window.search_for_window( "Shell - Konsole")
+for win in all:
+    print(win.info())</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command static" id="wait_exists">
+    <div class="section desc">
+        <h3><a name="wait_exists">Static Function:</a></h3>
+        <p class="function">wait_exists(title, [timeout])</p>
+        <p class="description">
+        Pauses script execution until a window exists and then returns a
+        handle to that window. Note that this function uses find_window
+        internally, which means that it should not have any side effects
+        if used to find a window that is already open. The intention is
+        for this function to be used to wait for a window to open after
+        an action has been taken.  For example, you could type the Alt-space
+        key combination, type "firefox", and then wait for firefox to open.
+        </p>
+        <p class="description">
+        It is an internal implementation detail that the script pauses for
+        approximately .05 seconds per loop.  If you supply a value for
+        timeout, then the elapsed time will add at each loop until it is
+        equal or greater than timeout value and None will be returned if
+        the window never opens.  It should be noted that testing shows that
+        the loop almost always executes one extra time, so don't count on the
+        timer being highly accurate.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name">title</td>
+            <td class="req">yes</td>
+            <td class="desc">The search term.</td>
+        </tr>
+        <tr class="parameter">
+            <td class="name bottom">timeout</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">A timout period.  Whole numbers are interpreted as seconds.</td>
+        </tr>
+    </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        A handle to the window, or None if the window never opens and a timeout
+        value is supplied.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Open Konsole, and do a directory listing once it appears
+import xaut
+import time
+kbd = xaut.keyboard()
+kbd.type("! ") #That's alt + space
+time.sleep(.5)
+kbd.type("konsole{Return}")
+konsole = xaut.window.wait_exists("Konsole")
+time.sleep(1) #So that window has time to initialize
+kbd.type("ls{Return}")</pre>
+<pre class="example_code">#Attempt to open a window which does not exist
+import xaut
+import time
+kbd = xaut.keyboard()
+kbd.type("! ") #That's alt + space
+time.sleep(.5)
+kbd.type("xyz123abc{Return}")
+problem = xaut.window.wait_exists("xyz123abc", 2)
+if(problem):
+    print("Do you really have a program called 'xyz123abc'?")
+else:
+    print("Could not open 'xyz123abc'")</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="find_outer_parent">
+    <div class="section desc">
+        <h3><a name="find_outer_parent">Function:</a></h3>
+        <p class="function">find_outer_parent()</p>
+        <p class="description">
+        Some programs have the quirk that the Window handle returned from find_window()
+        is not the same as the Window handle returned from active_window().  Eclipse
+        exhibits this behavior - or at least it did when I was writing this.  You can use
+        this function to get the outer window handles of any windows that behave in this
+        fashion if it helps.  This function is used internally by
+        <a href="#wait_active">wait_active</a> for example.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        None
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        The outer parent of a given window, which may or may not be the same window
+        handle as the original window.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#I'm using Eclipse in this example, since I know it works
+import xaut
+eclipse = xaut.window.find_window(".*Eclipse")
+if(eclipse):
+    eclipse.activate()
+    eclipse.wait_active()
+    active = xaut.window.active_window()
+    print("Active id:  %d" % active.id)
+    print("Eclipse id: %d" % eclipse.id)
+</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="is_valid">
+    <div class="section desc">
+        <h3><a name="is_valid">Function:</a></h3>
+        <p class="function">is_valid()</p>
+        <p class="description">
+        Returns a non zero value if the window handle object points to a valid window.
+        </p>
+        <p class="description">
+        It should be noted that although this function can help reduce the risk
+        of race conditions, it is not fool proof.  This function is quite fast,
+        but even so it's possible the window could be closed between the check
+        with X11 and value being returned to your script.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        None
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        Non zero if the window is valid, zero otherwise.
+        Note that this can be used as the condition for a loop waiting for a window
+        to close.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Get the name of a window if it's valid
+#Try this example twice:
+# The first time, just let it run.
+# The second, close the window during the pause
+import xaut
+import time
+kbd = xaut.keyboard()
+kbd.type("!{Tab}")
+time.sleep(.5)
+win = xaut.window.active_window()
+time.sleep(5)
+#If window is still valid, print its name
+if(win.is_valid()):
+    print("Window %s is still valid" %
+        win.name())
+else:
+    print("Window closed while waiting")</pre>
+<pre class="example_code">#Close a multi-tabbed Konsole window
+import xaut
+import time
+win = xaut.window.find_window("Konsole")
+kbd = xaut.keyboard()
+if(win):
+    win.activate()
+    win.wait_active()
+    while(win.is_valid()):
+        kbd.type("exit{Return}")
+        time.sleep(.2)</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+
+
+
+
+
+
+
+<div class="command" id="is_active">
+    <div class="section desc">
+        <h3><a name="is_active">Function:</a></h3>
+        <p class="function">is_active()</p>
+        <p class="description">
+        Returns a boolean indication of whether or not the window is active.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        None
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        True if the window is active, false otherwise.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Make sure two different windows are open for this
+import xaut
+import time
+kbd = xaut.keyboard()
+win = xaut.window.active_window()
+print(win.is_active())
+kbd.type("!{Tab}")
+time.sleep(1)
+print(win.is_active())
+</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="activate">
+    <div class="section desc">
+        <h3><a name="activate()">Function:</a></h3>
+        <p class="function">activate()</p>
+        <p class="description">
+        Activates the window pointed to by the window object handle.
+        Note that if the window in question is not on the current
+        desktop, then the display is switched to that desktop (which
+        is to say that the window is not moved).
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        None.
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        <p>
+        Non-zero value if call succeeds, zero otherwise.
+        </p><p>
+        Be cautious, "succeeds" in this context doesn't necessarily mean that
+        your application successfully activated the window.  It means that X11
+        did not report any errors or throw any exceptions.
+        </p>
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Be sure to use window names which will work
+import xaut
+import time
+def get_window(prompt):
+    title = raw_input(prompt)
+    win = None
+    if(title):
+        win = xaut.window.find_window(title)
+        if(win == None):
+            print("Unable to find %s" %
+                title)
+    else:
+        print("Invalid input")
+    return win
+
+win1 = None
+while(win1 == None):
+    win1 = get_window("Input a search term for the first window: ")
+
+win2 = None
+while(win2 == None):
+    win2 = get_window("Input a search term for the second window: ")
+
+win1.activate()
+time.sleep(3)
+win2.activate()</pre>
+<pre class="example_code">#Switch to a window on another desktop
+import xaut
+import time
+disp = xaut.display()
+if(disp.desktop_count() &lt; 2):
+    print("Unable to demonstrate, only one desktop")
+    exit
+
+win_desk = 1
+tst_desk = 2
+if(disp.desktop() == 1):
+    win_desk = 2
+    tst_desk = 1
+
+disp.desktop(win_desk)
+win = xaut.window.active_window()
+if(win == None):
+    print("Unable to demonstrate, no open windows")
+    exit
+
+disp.desktop(tst_desk)
+print("About to activate %s" %
+    win.name())
+time.sleep(3)
+win.activate()</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="maximize">
+    <div class="section desc">
+        <h3><a name="maximize">Function:</a></h3>
+        <p class="function">maximize([tf])</p>
+        <p class="description">
+        Maximizes the window both horizontally and vertically
+        if the optional flag supplied is non-zero.  Restores from
+        maximization both horizontally and vertically if the
+        optional flag supplied is 0.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">tf</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">Maximizes if the value is non-zero (the default), otherwise removes maximization.</td>
+        </tr>
+    </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        <p>
+        Non-zero value if call succeeds, zero otherwise.
+        </p><p>
+        Be cautious, "succeeds" in this context doesn't necessarily mean that
+        your application successfully maximized the window.  It means that X11
+        did not report any errors or throw any exceptions.
+        </p>
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Maximize and then restore the window
+import xaut
+import time
+win = xaut.window.active_window()
+win.restore() #In case it's already maximized
+win.maximize() #Maximizes (note the lack of a flag)
+time.sleep(5)
+win.maximize(0) #Restores from maximize
+time.sleep(5)
+win.maximize(1) #Maximizes (note the flag this time)
+time.sleep(5)'win.maximize(0) #Final restoration</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="maximize_horz">
+    <div class="section desc">
+        <h3><a name="maximize_horz">Function:</a></h3>
+        <p class="function">maximize_horz([tf])</p>
+        <p class="description">
+        Maximizes the window only in the horizontal direction
+        if the optional flag supplied is non-zero.  Restores from
+        maximization only in the horizontal direction if the
+        optional flag supplied is 0.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">tf</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">Maximizes if the value is non-zero (the default), otherwise removes maximization.</td>
+        </tr>
+    </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        <p>
+        Non-zero value if call succeeds, zero otherwise.
+        </p><p>
+        Be cautious, "succeeds" in this context doesn't necessarily mean that
+        your application successfully maximized the window.  It means that X11
+        did not report any errors or throw any exceptions.
+        </p>
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Maximize and then restore the window
+import xaut
+import time
+win = xaut.window.active_window()
+win.restore() #In case its already maximized
+win.maximize_horz() #Maximizes (note the lack of a flag)
+time.sleep(5)
+win.maximize_horz(0) #Restores from maximize
+time.sleep(5)
+win.maximize_horz(1) #Maximizes (note the flag this time)
+time.sleep(5)
+win.maximize_horz(0) #Final restoration</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="maximize_vert">
+    <div class="section desc">
+        <h3><a name="maximize_vert">Function:</a></h3>
+        <p class="function">maximize_vert([tf])</p>
+        <p class="description">
+        Maximizes the window only in the vertical direction
+        if the optional flag supplied is non-zero.  Restores from
+        maximization only in the vertical direction if the
+        optional flag supplied is 0.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">tf</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">Maximizes if the value is non-zero (the default), otherwise removes maximization.</td>
+        </tr>
+    </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        <p>
+        Non-zero value if call succeeds, zero otherwise.
+        </p><p>
+        Be cautious, "succeeds" in this context doesn't necessarily mean that
+        your application successfully maximized the window.  It means that X11
+        did not report any errors or throw any exceptions.
+        </p>
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Maximize and then restore the window
+import xaut
+import time
+win = xaut.window.active_window()
+win.restore() #In case its already maximized
+win.maximize_vert() #Maximizes (note the lack of a flag)
+time.sleep(5)
+win.maximize_vert(0) #Restores from maximize
+time.sleep(5)
+win.maximize_vert(1) #Maximizes (note the flag this time)
+time.sleep(5)
+win.maximize_vert(0) #Final restoration</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="minimize">
+    <div class="section desc">
+        <h3><a name="minimize">Function:</a></h3>
+        <p class="function">minimize([tf])</p>
+        <p class="description">
+        Minimizes (iconifies) the window if the optional value is non-zero,
+        (the default) otherwise restores the window.  Note that "minimize"
+        and "iconify" do exactly the same thing internally.  Use whichever
+        is more comfortable.  You can even mix and match calls.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">tf</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">Minimizes the window if the value is non-zero (the default).  Restores it otherwise.</td>
+        </tr>
+    </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        <p>
+        Non-zero value if call succeeds, zero otherwise.
+        </p><p>
+        Be cautious, "succeeds" in this context doesn't necessarily mean that
+        your application successfully minimized the window.  It means that X11
+        did not report any errors or throw any exceptions.
+        </p>
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Minimize then restore a window
+import xaut
+import time
+win = xaut.window.active_window()
+win.minimize() #Minimizes (note the lack of a flag)
+time.sleep(5)
+win.minimize(0) #Restores the window
+time.sleep(5)
+win.minimize(1) #Minimizes (note the flag this time)
+time.sleep(5)
+win.minimize(0) #Final restoration</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="iconify">
+    <div class="section desc">
+        <h3><a name="iconify">Function:</a></h3>
+        <p class="function">iconify([tf])</p>
+        <p class="description">
+        Iconifies (minimizes) the window if the optional value is non-zero,
+        (the default) otherwise restores the window.  Note that "minimize"
+        and "iconify" do exactly the same thing internally.  Use whichever
+        is more comfortable.  You can even mix and match calls.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">tf</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">Iconifies the window if the value is non-zero (the default).  Restores it otherwise.</td>
+        </tr>
+    </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        <p>
+        Non-zero value if call succeeds, zero otherwise.
+        </p><p>
+        Be cautious, "succeeds" in this context doesn't necessarily mean that
+        your application successfully iconified the window.  It means that X11
+        did not report any errors or throw any exceptions.
+        </p>
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Iconify then restore a window
+import xaut
+import time
+win = xaut.window.active_window()
+win.iconify() #Iconifies (note the lack of a flag)
+time.sleep(5)
+win.iconify(0) #Restores the window
+time.sleep(5)
+win.iconify(1) #Iconifies (note the flag this time)
+time.sleep(5)
+win.iconify(0) #Final restoration</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="full_screen">
+    <div class="section desc">
+        <h3><a name="full_screen">Function:</a></h3>
+        <p class="function">full_screen([tf])</p>
+        <p class="description">
+        Makes the window "full screen", which typically means "maximize"
+        with no title or status bars.  Different windows react differently so
+        test your target window.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">tf</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">Sets the window to "full screen" if the value is non-zero (the default).  Restores it otherwise.</td>
+        </tr>
+    </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        <p>
+        Non-zero value if call succeeds, zero otherwise.
+        </p><p>
+        Be cautious, "succeeds" in this context doesn't necessarily mean that
+        your application successfully made the window full screen.  It means that X11
+        did not report any errors or throw any exceptions.
+        </p>
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Full screen and then restore a window
+import xaut
+import time
+win = xaut.window.active_window()
+win.restore() #In case its already full screen
+win.full_screen() #Makes the window full screen (note the lack of a flag)
+time.sleep(5)
+win.full_screen(0) #Restores the window
+time.sleep(5)
+win.full_screen(1) #Makes the window full screen (note the flag this time)
+time.sleep(5)
+win.full_screen(0) #Final restoration</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="restore">
+    <div class="section desc">
+        <h3><a name="restore">Function:</a></h3>
+        <p class="function">restore()</p>
+        <p class="description">
+        Restores a window to its natural state.  That is to say that it will
+        no longer be minimized/iconified, maximized, full screen, or etcetera.
+        This is a single-step that is equivalent to calling all other state
+        changing functions and supplying them all with a false value.  It will
+        even undo multiple flags at once.  For example, a window that is first
+        maximized and then iconified will be un-iconified, and then restored
+        to its natural size.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        None
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        <p>
+        Non-zero value if call succeeds, zero otherwise.
+        </p><p>
+        Be cautious, "succeeds" in this context doesn't necessarily mean that
+        your application successfully restored the window.  It means that X11
+        did not report any errors or throw any exceptions.
+        </p>
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">import xaut
+import time
+win = xaut.window.active_window()
+win.restore() #Make sure it starts out normal
+win.maximize()
+time.sleep(5)
+win.restore()
+time.sleep(5)
+
+win.maximize_horz()
+time.sleep(5)
+win.restore()
+time.sleep(5)
+
+win.maximize_vert()
+time.sleep(5)
+win.restore()
+time.sleep(5)
+
+win.minimize()
+time.sleep(5)
+win.restore()
+time.sleep(5)
+
+win.iconify()
+time.sleep(5)
+win.restore()
+time.sleep(5)
+
+win.full_screen()
+time.sleep(5)
+win.restore()
+time.sleep(5)
+
+win.shade()
+time.sleep(5)
+win.restore()
+time.sleep(5)</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="shade">
+    <div class="section desc">
+        <h3><a name="shade">Function:</a></h3>
+        <p class="function">shade([tf])</p>
+        <p class="description">
+        For those that don't know, "shading" is where the window rolls up into the
+        bar so the title bar is all that is visible.  The title bar is not moved,
+        nor is the window resized.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">tf</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">Shades the window if the value is non-zero (the default).  Restores it otherwise.</td>
+        </tr>
+    </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        <p>
+        Non-zero value if call succeeds, zero otherwise.
+        </p><p>
+        Be cautious, "succeeds" in this context doesn't necessarily mean that
+        your application successfully shaded the window.  It means that X11
+        did not report any errors or throw any exceptions.
+        </p>
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Shades and then restores a window
+import xaut
+import time
+win = xaut.window.active_window()
+win.restore() #In case its already shaded
+win.shade() #Shades (note the lack of a flag)
+time.sleep(5)
+win.shade(0) #Restores the window
+time.sleep(5)
+win.shade(1) #Shades the window (note the flag this time)
+time.sleep(5)
+win.shade(0) #Final restoration</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="move">
+    <div class="section desc">
+        <h3><a name="move">Function:</a></h3>
+        <p class="function">move(x, y[, desk])</p>
+        <p class="description">
+        Moves the window to the target coordinates, and optionally to the
+        supplied desktop.  Note that while the "x" and "y" parameters are
+        required, you can supply a value less than zero to indicate that
+        you do not want that particular value to change.  For example,
+        win.move(-1, 10) means "leave the window's x coordinate as it is,
+        but move it to 10 pixels down from the top".
+        </p>
+        <p class="description">
+        The fact that any value less than zero indicates "do not change"
+        means that it is impossible to move a window off the screen.  Which
+        means that it's possible to manually move a window to a coordinate
+        that is impossible with xaut.  At least without cobbling
+        together some sort of mouse click and drag code using the mouse
+        object.
+        </p>
+        <p class="description">
+        Another point of interest is the value for desktop.  All values are
+        "1" indexed, rather than "0" indexed.  The value "0" is special,
+        and places the window on all desktops.  Any value less than zero
+        means "leave the window where it is", and is exactly the same as not
+        supplying a value at all.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name">x</td>
+            <td class="req">yes</td>
+            <td class="desc">The target x coordinate.</td>
+        </tr>
+        <tr class="parameter">
+            <td class="name">y</td>
+            <td class="req">yes</td>
+            <td class="desc">The target y coordinate.</td>
+        </tr>
+        <tr class="parameter">
+            <td class="name bottom">desk</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">The desktop to send the window to.  Note that "0" puts the window on all desktops.</td>
+        </tr>
+    </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        <p>
+        Non-zero value if call succeeds, zero otherwise.
+        </p><p>
+        Be cautious, "succeeds" in this context doesn't necessarily mean that
+        your application successfully moved the window.  It means that X11
+        did not report any errors or throw any exceptions.
+        </p>
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Move a window 10 pixels to the right, and then back again
+import xaut
+import time
+win = xaut.window.active_window()
+currX = win.x()
+win.move(currX + 10, -1)
+time.sleep(5)
+win.move(currX, -1)</pre>
+<pre class="example_code">#Move a window down 10 pixels, and then back again
+import xaut
+import time
+win = xaut.window.active_window()
+currY = win.y()
+win.move(-1, currY + 10)
+time.sleep(5)
+win.move(-1, currY)</pre>
+<pre class="example_code">#Move a window down and right simultaneously, and then back again
+import xaut
+import time
+win = xaut.window.active_window()
+currX = win.x()
+currY = win.y()
+win.move(currX + 10, currY + 10)
+time.sleep(5)
+win.move(currX, currY)</pre>
+<pre class="example_code">
+#Move a window from desktop 1 to desktop 2 and back
+import xaut
+import time
+disp = xaut.display()
+disp.desktop(1)
+win = xaut.active_window()
+win.move(-1, -1, 2)
+disp.desktop(2)
+time.sleep(5)
+win.move(-1, -1, 1)
+disp.desktop(1)</pre>
+<pre class="example_code">#Put a window on all desktops, and then put it back
+import xaut
+import time
+
+time.sleep(5)
+disp = xaut.display()
+count = disp.desktop_count()
+desk = disp.desktop()
+win = xaut.window.active_window()
+win.move(-1, -1, 0)
+for i in range(1, count + 1):
+    disp.desktop(i)
+    time.sleep(2)
+
+win.move(-1, -1, desk)
+time.sleep(2)
+win.activate()</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="resize">
+    <div class="section desc">
+        <h3><a name="resize">Function:</a></h3>
+        <p class="function">resize(w, h)</p>
+        <p class="description">
+            Change the dimensions of the specified window.  Note that a window
+            may refuse to resize, or it may refuse to resize to the desired
+            size.  Also, although both w and h parameters are required, you can supply
+            zero as either parameter to indicate that you do not want that particular
+            value to change. For example, win.resize(0, 450) means leave the
+            window's width as-is and make the window height 450 pixels.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name">w</td>
+            <td class="req">yes</td>
+            <td class="desc">The desired width of the window.</td>
+        </tr>
+        <tr class="parameter">
+            <td class="name bottom">h</td>
+            <td class="req bottom">yes</td>
+            <td class="desc bottom">The desired height of the window.</td>
+        </tr>
+    </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        <p>
+        Non-zero value if call succeeds, zero otherwise.
+        </p><p>
+        Be cautious, "succeeds" in this context doesn't necessarily mean that
+        your application successfully altered the winodw size.  It means that X11
+        did not report any errors or throw any exceptions.
+        </p>
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Resize a window to 640 X 480
+import xaut
+win = xaut.window.active_window()
+print("%s is currently %d X %d pixels" %
+    (win.name(), win.w(), win.h()))
+win.resize(640, 480)
+print("%s is now %d X %d pixels" %
+    (win.name(), win.w(), win.h()))
+</pre>
+<pre class="example_code">#Change only width
+import xaut
+win = xaut.window.active_window()
+print("%s is currently %d X %d pixels" %
+    (win.name(), win.w(), win.h()))
+win.resize(640, 0)
+print("%s is now %d X %d pixels" %
+    (win.name(), win.w(), win.h()))
+</pre>
+<pre class="example_code">#Change only height
+import xaut
+win = xaut.window.active_window()
+print("%s is currently %d X %d pixels" %
+    (win.name(), win.w(), win.h()))
+win.resize(0, 480)
+print("%s is now %d X %d pixels" %
+    (win.name(), win.w(), win.h()))
+</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="x">
+    <div class="section desc">
+        <h3><a name="x">Function:</a></h3>
+        <p class="function">x()</p>
+        <p class="description">
+            Retrieve the window's current x coordinate
+            of its upper left corner.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        None
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        The x coordinate of the window.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Get the x coordinate of the currently active window
+import xaut
+win = xaut.window.active_window()
+print("Upper left corner of %s is %d pixels over" %
+    (win.name(), win.x()))</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="y">
+    <div class="section desc">
+        <h3><a name="y">Function:</a></h3>
+        <p class="function">y()</p>
+        <p class="description">
+            Retrieve the window's current y coordinate of
+            its upper left corner.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        None
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        TODO
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Get the y coordinate of the currently active window
+import xaut
+win = xaut.window.active_window()
+print("Upper left corner of %s is %d pixels down" %
+    (win.name(), win.y()))</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="w">
+    <div class="section desc">
+        <h3><a name="w">Function:</a></h3>
+        <p class="function">w()</p>
+        <p class="description">
+        Retrieve the window's current width.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        None
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        The window's current width in pixels.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Get the width of the currently active window
+import xaut
+win = xaut.window.active_window()
+print("Window %s is %d pixels wide" %
+    (win.name(), win.w()))</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="h">
+    <div class="section desc">
+        <h3><a name="h">Function:</a></h3>
+        <p class="function">h()</p>
+        <p class="description">
+        Retrieve the window's current height.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        None
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        The window's current height.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Get the height of the currently active window
+import xaut
+win = xaut.window.active_window()
+print("Window %s is %d pixels tall" %
+    (win.name(), win.h()))</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="name">
+    <div class="section desc">
+        <h3><a name="name">Function:</a></h3>
+        <p class="function">name()</p>
+        <p class="description">
+        Retreive the window's title/name.  It should be noted that most windowed
+        applications consist of multiple "windows" glued together to form a
+        cohesive whole.  It's possible that the name returned by this function
+        will not match what you see in the title bar.  Experiment with
+        your windows to see what they return.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        None
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        The window's title/name.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Get the title of the currently active window
+import xaut
+win = xaut.window.active_window()
+print("The active window is called %s" %
+    (win.name()))</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="desktop">
+    <div class="section desc">
+        <h3><a name="desktop">Function:</a></h3>
+        <p class="function">desktop()</p>
+        <p class="description">
+        Retrieve the window's current desktop number.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        None
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        The window's current desktop number.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Get the window's current desktop number
+import xaut
+win = xaut.window.active_window()
+print("Window %s is on desktop %d" %
+    (win.name(), win.desktop()))</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="info">
+    <div class="section desc">
+        <h3><a name="info">Function:</a></h3>
+        <p class="function">info()</p>
+        <p class="description">
+        All window info in a tuple (x, y, w, h, name, desktop, id).
+        This probably has more use as a debugging tool than
+        anything else, seeing as how each item is available
+        individually.  I typically use this to look at all
+        window information while I'm testing stuff.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        None
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        A tuple of window information in the order, x, y, w, h, name, desktop, window id.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Get all info about the current window
+import xaut
+win = xaut.window.active_window()
+print(win.info())</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="wait_active">
+    <div class="section desc">
+        <h3><a name="wait_active">Function:</a></h3>
+        <p class="function">wait_active([timeout])</p>
+        <p class="description">
+        Wait until this window is the active window.
+        </p>
+        <p class="description">
+        It is an internal implementation detail that the script pauses for
+        approximately .05 seconds per loop.  If you supply a value for
+        timeout, then the elapsed time will add at each loop until it is
+        equal or greater than timeout value and False will be returned if
+        the window does not become active during that time period.  It should
+        be noted that testing shows that the loop almost always executes one
+        extra time, so don't count on the timer being highly accurate.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">timeout</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">A timout period. Whole numbers are interpreted as seconds.</td>
+        </tr>
+    </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        True if the window activates.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Be sure to have at least two windows open for this test
+import xaut
+import time
+kbd = xaut.keyboard()
+win = xaut.window.active_window()
+win.iconify()
+time.sleep(2)
+win.activate()
+win.wait_active()</pre>
+<pre class="example_code">#Attempt to wait for an invalid window to demonstrate the timeout
+import xaut
+win = xaut.window(5) #Almost certainly invalid
+found = win.wait_active(5) #Wait five seconds for the invalid window
+if(found):
+    print("The window was found?!?")
+else:
+    print("Couldn't open window")</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+
+</div><!-- /content -->
+<div id="footer">
+Click the image to go to the download page.&nbsp;
+<a href="http://sourceforge.net/projects/xautomation">
+    <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=255010&amp;type=15"
+    width="150" height="40"
+    alt="Get X Automation at SourceForge.net. Fast, secure and Free Open Source software downloads"></a>
+</div>
+</div><!-- /container -->
+</body>
+</html>

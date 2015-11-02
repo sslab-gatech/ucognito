@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: xaut
+Version: 0.4.5
+Summary: Python X window automation
+Home-page: http://xautomation.sourceforge.net
+Author: Chris Parker
+Author-email: chrsprkr3@gmail.com
+License: Python 2.5 or greater (where compatible with OSI)
+Description: Python library to manipulate X11 windows
+Platform: posix + X11 like window manager
+

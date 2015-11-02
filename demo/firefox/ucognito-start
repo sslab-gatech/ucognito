@@ -1,0 +1,8 @@
+#!/bin/bash
+
+. ./settings.sh
+
+rm -r $PROFILE_DEMO 2>/dev/null
+
+cp -r $PROFILE_EMPTY $PROFILE_DEMO
+mbox -P "profile-$1.cfg" -s -- $FIREFOX_BIN -browser -profile $PROFILE_DEMO

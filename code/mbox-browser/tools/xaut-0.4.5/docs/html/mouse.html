@@ -1,0 +1,570 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!--
+ $URL: https://xautomation.svn.sourceforge.net/svnroot/xautomation/trunk/docs/html/mouse.html $
+ $Author: chris_parker $
+ $Date: 2012-06-30 07:29:19 -0700 (Sat, 30 Jun 2012) $
+ $Rev: 22 $
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="xaut.css">
+<title>Mouse Commands</title>
+</head>
+<body>
+<div id="container">
+<div id="header">
+    <h1>XAUT (formerly X Automation)</h1>
+</div>
+<div id="links">
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="clipboard.html">Clipboard Functions</a></li>
+        <li><a href="display.html">Display Functions</a></li>
+        <li><a href="keyboard.html">Keyboard Functions</a></li>
+        <li class="current">Mouse Functions</li>
+        <li><a href="window.html">Window Functions</a></li>
+        <li><a href="other.html">Other Stuff</a></li>
+    </ul>
+</div>
+<div id="content">
+
+<h2>Mouse Object Functions</h2>
+<div class="synopsis">
+    <h3>Function Synopsis</h3>
+    <table class="synopsis_table">
+    <tr><th>Function</th><th>Brief Description</th></tr>
+    <tr>
+        <td><a href="#move_delay">move_delay([delay])</a></td>
+        <td>The delay at each pixel movement.</td>
+    </tr>
+    <tr>
+        <td><a href="#down_delay">down_delay([delay])</a></td>
+        <td>How long the mouse stays down when "clicked".</td>
+    </tr>
+    <tr>
+        <td><a href="#click_delay">click_delay([delay])</a></td>
+        <td>How long to pause between mouse clicks.</td>
+    </tr>
+    <tr>
+        <td><a href="#click">click(btn[, cnt])</a></td>
+        <td>Click the mouse.</td>
+    </tr>
+    <tr>
+        <td><a href="#btn_down">btn_down(btn)</a></td>
+        <td>Press and hold down the mouse. Don't forget to release it!</td>
+    </tr>
+    <tr>
+        <td><a href="#btn_up">btn_up(btn)</a></td>
+        <td>Release a previously pressed down mouse.</td>
+    </tr>
+    <tr>
+        <td><a href="#move">move(x, y[, win])</a></td>
+        <td>Moves the mouse to the specified coordinates.</td>
+    </tr>
+    <tr>
+        <td><a href="#x">x([win])</a></td>
+        <td>Returns the mouse's current y position.</td>
+    </tr>
+    <tr>
+        <td class="bottom"><a href="#y">y([win])</a></td>
+        <td class="bottom">Returns the mouse's current y position.</td>
+    </tr>
+    </table>
+</div>
+<div class="command" id="move_delay">
+    <div class="section desc">
+        <h3><a name="move_delay">Function:</a></h3>
+        <p class="function">move_delay([delay])</p>
+        <p class="description">
+        How long to wait between at each pixel movement in milliseconds.
+        0 means move the mouse instantly.
+        10 is the default, and moves the mouse fairly rapidly.
+        Anything greater than about 100 will start being annoying.
+        Does not make any changes if delay is less than zero or is omitted.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">delay</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">The delay in milliseconds</td>
+        </tr>
+        </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        The current delay which may or may not have changed.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Change the move delay to 5 ms
+import xaut
+mouse = xaut.mouse()
+delay = mouse.move_delay(5)
+print(delay) #Prints "5"</pre>
+<pre class="example_code">#Make mouse jump instantly
+import xaut
+mouse = xaut.mouse()
+delay = mouse.move_delay(0)
+print(delay) #Prints "0"</pre>
+<pre class="example_code">#Find the current delay without making any changes
+import xaut
+mouse = xaut.mouse()
+delay = mouse.move_delay()
+print(delay) #Prints current delay</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="down_delay">
+    <div class="section desc">
+        <h3><a name="down_delay">Function:</a></h3>
+        <p class="function">down_delay([delay])</p>
+        <p class="description">
+        How long the mouse button stays down when "clicked" in milliseconds.
+        Default is 10 milliseconds, and usually works with most applications.
+        Does not make any changes if delay is less than zero.  Regardless,
+        this function always returns the current delay.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">delay</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">The delay in milliseconds</td>
+        </tr>
+        </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        The current delay which may or may not have changed.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Change the down delay to 5 ms
+import xaut
+mouse = xaut.mouse()
+delay = mouse.down_delay(5)
+print(delay) #Prints "5"</pre>
+<pre class="example_code">#Find the current delay without making any changes
+import xaut
+mouse = xaut.mouse()
+delay = mouse.down_delay()
+print(delay) #Prints current delay</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="click_delay">
+    <div class="section desc">
+        <h3><a name="click_delay">Function:</a></h3>
+        <p class="function">click_delay([delay])</p>
+        <p class="description">
+        The number of milliseconds delay between clicks in a multi-click event.
+        Default is 10 milliseconds, and usually works with most applications.
+        Does not make any changes if delay is less than zero.  Regardless,
+        this function always returns the current delay.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">delay</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">The delay in milliseconds</td>
+        </tr>
+        </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        The current delay which may or may not have changed.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Change the click delay to 5 ms
+import xaut
+mouse = xaut.mouse()
+delay = mouse.click_delay(5)
+print(delay) #Prints "5"</pre>
+<pre class="example_code">#Find the current delay without making any changes
+import xaut
+mouse = xaut.mouse()
+delay = mouse.click_delay()
+print(delay) #Prints current delay</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="click">
+    <div class="section desc">
+        <h3><a name="click">Function:</a></h3>
+        <p class="function">click(btn[, cnt])</p>
+        <p class="description">
+        Performs a mouse click.
+        In pseudo-code this performs the following:
+        </p>
+<pre>
+for i = 1 to count
+    mouse_down(btn)
+    sleep_millis(mouse_down_delay)
+    mouse_up(btn)
+    if count &gt; i
+        sleep_millis(mouse_click_delay)
+    endif
+next</pre>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name">btn</td>
+            <td class="req">yes</td>
+            <td class="desc">The mouse button to click</td>
+        </tr>
+        <tr class="parameter">
+            <td class="name bottom">cnt</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">The number of clicks. 1 is default.</td>
+        </tr>
+        </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        <p>
+        Non-zero value if call succeeds, zero otherwise.
+        </p><p>
+        Be cautious, "succeeds" in this context doesn't necessarily mean that
+        your application received the mouse click.  It means that X11 did not
+        report any errors or throw any exceptions.
+        </p>
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Click the mouse once
+import xaut
+mouse = xaut.mouse()
+mouse.click(1)</pre>
+<pre class="example_code">#Double click the mouse
+import xaut
+mouse = xaut.mouse()
+mouse.click(1, 2)</pre>
+<pre class="example_code">#Click the middle mouse button
+import xaut
+mouse = xaut.mouse()
+mouse.click(2)</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="btn_down">
+    <div class="section desc">
+        <h3><a name="btn_down">Function:</a></h3>
+        <p class="function">btn_down(btn)</p>
+        <p class="description">
+        Presses down and does not release the button pointed to by btn.
+        Note that this <em>must</em> be followed by a call to btn_up, otherwise
+        the mouse will stay down until a sequence of events causes X11 to
+        reset mouse status.
+        </p><p>
+        The most reasonable use for this method is to perform a mouse selection.
+        You would put the mouse at one corner of the drag operation, press the
+        button down, move the mouse to the opposite corner of the drag, and
+        then release the button.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">btn</td>
+            <td class="req bottom">yes</td>
+            <td class="desc bottom">The button to press down</td>
+        </tr>
+        </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        <p>
+        Non-zero value of call succeeds, zero otherwise.
+        </p><p>
+        Be cautious, "succeeds" in this context doesn't necessarily mean that
+        your application received the mouse click.  It means that X11 did not
+        report any errors or throw any exceptions.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Performs a selection over the area 100x100 -&gt; 200x200
+import xaut
+mouse = xaut.mouse()
+mouse.move(100, 100)
+mouse.btn_down(1)
+mouse.move(200, 200)
+mouse.btn_up(1)</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="btn_up">
+    <div class="section desc">
+        <h3><a name="btn_up">Function:</a></h3>
+        <p class="function">btn_up(btn)</p>
+        <p class="description">
+        Releases a button previously pressed down with btn_down.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">btn</td>
+            <td class="req bottom">yes</td>
+            <td class="desc bottom">Releases the button</td>
+        </tr>
+        </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        <p>
+        Non-zero value of call succeeds, zero otherwise.
+        </p><p>
+        Be cautious, "succeeds" in this context doesn't necessarily mean that
+        your application received the mouse click.  It means that X11 did not
+        report any errors or throw any exceptions.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Performs a selection over the area 100x100 -&gt; 200x200
+import xaut
+mouse = xaut.mouse()
+mouse.move(100, 100)
+mouse.btn_down(1)
+mouse.move(200, 200)
+mouse.btn_up(1)</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="move">
+    <div class="section desc">
+        <h3><a name="move">Function:</a></h3>
+        <p class="function">move(x, y[, win])</p>
+        <p class="description">
+        Moves the mouse to the coordinates supplied.
+        </p><p>
+        If a window is not supplied, then the coordinates are considered relative
+        to the screen.  In this case, the x and y coordinates supplied are
+        normalized such that they cannot be less than zero or greater than the
+        screen's resolution.
+        </p><p>
+        If a window is supplied, then the coordinates are considered relative
+        to the window.  In this case, the x and y coordinates are normalized
+        such that their relative values cannot exceed the maximum absolute
+        values that the windows position dictates.  For example, if a window's
+        top left coordinates are 100 x 100, then the minimum value allowed in
+        this function are -100 x -100.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name">x</td>
+            <td class="req">yes</td>
+            <td class="desc">The desired target x coordinate</td>
+        </tr>
+        <tr class="parameter">
+            <td class="name">y</td>
+            <td class="req">yes</td>
+            <td class="desc">The desired target y coordinate</td>
+        </tr>
+        <tr class="parameter">
+            <td class="name bottom">win</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">The x and y coordinates are relative to this window.</td>
+        </tr>
+        </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        <p>
+        Non-zero value of call succeeds, zero otherwise.
+        </p><p>
+        Be cautious, "succeeds" in this context doesn't necessarily mean that
+        your application received the mouse click.  It means that X11 did not
+        report any errors or throw any exceptions.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Move the mouse smoothly to 100x100 (like a user would)
+import xaut
+mouse = xaut.mouse()
+mouse.move(100, 100)</pre>
+<pre class="example_code">#Move the mouse instantly to 100x100
+import xaut
+mouse = xaut.mouse()
+mouse.move_delay(0)
+mouse.move(100, 100)</pre>
+<pre class="example_code">#Move the mouse to 20x20 on the current window
+import xaut
+win = xaut.window.active_window()
+mouse = xaut.mouse()
+mouse.move(20, 20, win)</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="x">
+    <div class="section desc">
+        <h3><a name="x">Function:</a></h3>
+        <p class="function">x([win])</p>
+        <p class="description">
+        Returns the mouse's current x coordinate.  If a window object
+        is supplied as a parameter, then the x coordinate is relative
+        to the window.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">win</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">If supplied, then the x coordinate is relative to the window.</td>
+        </tr>
+        </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        <p>The x coordinate.</p>
+        <p>Returns "INT_MIN" (which is architecture dependent) and prints an
+        error to the error stream in the event the call fails.  Basically, if
+        you receive an impossibly small value the call most likely failed.</p>
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Get the current absolute x coordinate
+import xaut
+mouse = xaut.mouse()
+x = mouse.x()
+msg = "The mouse's current x coordinate is %d" % (x)
+print(msg)</pre>
+<pre class="example_code">
+#Get the current x coordinate relative to the active window
+import xaut
+mouse = xaut.mouse()
+win = xaut.window.active_window()
+x = mouse.x(win)
+msg = "The mouse x is at %d relative to %s" % (x, win.name())
+print(msg)</pre>
+<pre class="example_code">#Attempt to get the x coordinate with an invalid window
+import xaut
+mouse = xaut.mouse()
+win = xaut.window(3) # &lt;- ALMOST CERTAINLY THAT IS INVALID!!
+x = mouse.x(win)
+msg = "The value returned was %d" % (x)
+print(msg)
+#Notice that it printed an impossibly small number.</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="y">
+    <div class="section desc">
+        <h3><a name="y">Function:</a></h3>
+        <p class="function">y([win])</p>
+        <p class="description">
+        Returns the mouse's current y coordinate.  If a window object
+        is supplied as a parameter, then the y coordinate is relative
+        to the window.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">win</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">If supplied, then the y coordinate is relative to the window.</td>
+        </tr>
+        </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        <p>The y coordinate.</p>
+        <p>Returns "INT_MIN" (which is architecture dependent) and prints an
+        error to the error stream in the event the call fails.  Basically, if
+        you receive an impossibly small value the call most likely failed.</p>
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Get the current absolute y coordinate
+import xaut
+mouse = xaut.mouse()
+y = mouse.y()
+msg = "The mouse's current y coordinate is %d" % (y)
+print(msg)</pre>
+<pre class="example_code">#Get the current y coordinate relative to the active window
+import xaut
+mouse = xaut.mouse()
+win = xaut.window.active_window()
+y = mouse.y(win)
+msg = "The mouse is at %d relative to %s" % (y, win.name())
+print(msg)</pre>
+<pre class="example_code">#Attempt to get the y coordinate with an invalid window
+import xaut
+mouse = xaut.mouse()
+win = xaut.window(3) # &lt;- ALMOST CERTAINLY THAT IS INVALID!!
+y = mouse.y(win)
+msg = "The value returned was %d" % (y)
+print(msg)
+#Notice that it printed an impossibly small number.</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+
+</div><!-- /content -->
+<div id="footer">
+Click the image to go to the download page.&nbsp;
+<a href="http://sourceforge.net/projects/xautomation">
+    <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=255010&amp;type=15"
+    width="150" height="40"
+    alt="Get X Automation at SourceForge.net. Fast, secure and Free Open Source software downloads"></a>
+</div>
+</div><!-- /container -->
+
+</body>
+</html>

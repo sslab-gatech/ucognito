@@ -1,0 +1,169 @@
+
+=== Preamble ===
+This software is intended to help users of XWindows automate basic windowing
+tasks.  For example you can open, move, and close windows based on title,
+you can move the mouse, or send keystrokes.
+
+I provide this software free of charge without warranty of any type.  I
+provide this in the hopes that it will be useful.  In the event you break
+this software, you are entitled to a full refund of the amount I charged. :)
+
+
+=== My Rationale ===
+There are a few X11 control libraries out there.  My basic problem with
+most of them  are that they are all called from the bash prompt.  This is fine,
+but it makes it difficult to do things like track window state.  At each call
+to the program, window information is gathered again, and the request is
+processed.
+
+
+=== What you'll need to compile this ===
+Note that Ubuntu (along with some other distributions of Linux) do not come
+with a development environment installed.  You'll need to install a development
+environment if you do not already have one.  You'll also want to install the
+development library for Python which corresponds to your installed version of
+Python.  You can get that entering "python -V" (on my computer, it returns
+Python 2.6.6).
+
+Ubuntu (and similar):
+ -- build-essential
+
+Programs:
+ -- swig
+
+Libraries for Ubuntu (and similar):
+ -- x11proto-xext-dev
+ -- libx11-dev
+ -- libxtst-dev
+
+Libraries for Fedora:
+ -- xorg-x11-proto-devel
+ -- libX11-devel
+ -- libXtst-devel
+
+Specifically if you are using Ubuntu and wish to compile this software, you can
+use the following command:
+
+$ sudo aptitude install build-essential swig x11proto-xext-dev libx11-dev \
+  libxtst-dev pythonN.N-dev
+
+(Where N.N matches the library version returned from "python -V")
+
+
+Or for Fedora use can use the following commands:
+
+$ sudo yum groupinstall \"Development Tools\"
+$ sudo yum install xorg-x11-proto-devel libX11-devel libXtst-devel pythonN.N-dev
+
+(Where N.N matches the library version returned from "python -V")
+
+
+=== If you want to modify the build ===
+ -- autoconf
+ -- automake
+ -- libtool
+
+
+=== What you'll need to run this ===
+This software was originally written against Python 2.6.  It's likely that
+there are few (if any) things which will prevent this code from running in
+Python 3.x.  However, I do not have Python 3.x installed, and cannot test it.
+
+To run this software - like say for example you compile it on one machine, and
+then transport the binary to another machine - make sure you have the following
+libraries installed (Ubuntu or similar):
+ -- libx11-dev
+ -- libxtst-dev
+
+(Fedora or similar)
+ -- libX11-devel
+ -- libXtst-devel
+
+
+=== Installing this software ===
+I highly recommend that you do not install this software.  It is simply beyond
+my resources to test this software in a wide variety of environments, and it's
+likely that automated update tools and the like will cause problems on your
+computer if you ignore this advice.  Note that there is a "make install" build
+target, which is installed for completeness sake, but I suggest you ignore it.
+
+All you need to do to use this software is make sure that xaut.py and
+_xautpy.so are in the same directory as your script.
+
+
+=== Thanks ===
+Many thanks to a person named Max Shalenyi.  Max sent me patch that showed me
+the following cool things:
+ 1) Which libraries are needed for 64 bit.  I'm still using 32 bit Debian.
+ 2) The commands necessary compile this library in Fedora.
+ 3) Max reminded me of the -fPIC flag - which I should have included.  <:O)
+ 4) My Python version stopped at 2.6 - which is what I have.  I added up to 2.9
+
+Thank you Max!!
+
+
+Thanks also to Beat Master Bob who found a bug in the mouse.move() code which
+manifests when the mouse is moved precisely 1 pixel in both the x and y
+directions simultaneously.  E.g. mouse.move(mouse.x() + 1, mouse.y() + 1).
+
+Thank you Beat Master Bob!!
+
+
+Thanks also to Chris Gagnon who had some problems in 64bit Ubuntu which lead
+me to find 3 problems:
+ 1) I was using XKeycodeToKeySym which was recently deprecated.  Too recently
+    for me to know about it in Debian Stable.
+ 2) I was printing a size_t incorrectly.  I was using %d when I should have
+    used %zu.
+ 3) Ubuntu puts their 64bit libraries someplace I wasn't looking.  I corrected
+    the build such that it looks in the proper place, and reorganized it such
+    that it will be easier to modify if there are other 64bit locations about
+    which I know nothing (I use 32bit Debian Stable).
+
+Thanks Chris!!
+
+
+Blain Lee recently sent me a note that he had to modify the Make file for his
+Raspberry Pi.  Not having one myself, I have no idea where the X11 libraries go.
+I've added what I think will work, but again, I don't have one, so I can't
+test it.  Feel free anyone to let me know if I didn't get it right.
+
+He also pointed out that the documentation for (window) wait_exists did not
+match what happens when the window does not appear.  The documentation said
+that it returns "None" (which is what I wanted), but in fact the function
+returned "False" which was a copy/paste error.  I've corrected that.  He also
+pointed out that find_window did not specify what happens when the window wasn't
+found.
+
+While I was there, I also added what happens when search_for_window finds no
+matches, just to be thorough.
+
+Thanks Blain!!
+
+
+
+Want to see your name in bright lights (well, not that bright, but still)?
+The following are welcome:
+ -- Patches
+ -- Bug Reports
+ -- How to compile or install on your favorite distro
+ -- Any other useful suggestions
+
+Note also that I don't get much traffic related to this library, so I don't
+watch the forums or my email that closely simply because it's unnecessary.
+Rest assured that if you email me, or if you post to the forum (nobody has as
+of the day that I'm writing this), you WILL get a response.  It may take a few
+days - but I WILL respond.  Even though this code doesn't move very fast, I
+actively maintain it.  I use it daily.
+
+Also, I've had the experience where someone emails me with questions or similar
+and my response bounces.  If you are going to email a question to me from the
+SourceForge site, please make sure your email address is in the body of the
+email so I can copy and paste it into a response if "reply-to" fails.  I'm
+not sure whether it gets munged on the SourceForge side or the GMail side, but
+the reply address fails frequently.
+
+Chris Parker
+email:      chrsprkr3@gmail.com
+Main Site:  http://xautomation.sourceforge.net
+Help Forum: https://sourceforge.net/projects/xautomation/forums/forum/924563

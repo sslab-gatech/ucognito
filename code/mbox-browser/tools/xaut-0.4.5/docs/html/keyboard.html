@@ -1,0 +1,798 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!--
+ $URL: https://xautomation.svn.sourceforge.net/svnroot/xautomation/trunk/docs/html/keyboard.html $
+ $Author: chris_parker $
+ $Date: 2012-08-03 20:25:59 -0700 (Fri, 03 Aug 2012) $
+ $Rev: 26 $
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="xaut.css">
+<title>Keyboard Commands</title>
+</head>
+<body>
+<div id="container">
+<div id="header">
+    <h1>XAUT (formerly X Automation)</h1>
+</div>
+<div id="links">
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="clipboard.html">Clipboard Functions</a></li>
+        <li><a href="display.html">Display Functions</a></li>
+        <li class="current">Keyboard Functions</li>
+        <li><a href="mouse.html">Mouse Functions</a></li>
+        <li><a href="window.html">Window Functions</a></li>
+        <li><a href="other.html">Other Stuff</a></li>
+    </ul>
+</div>
+<div id="content">
+
+<h2>Keyboard Object Functions</h2>
+<div class="synopsis">
+    <h3>Function Synopsis</h3>
+    <table class="synopsis_table">
+    <tr><th>Function</th><th>Brief Description</th></tr>
+    <tr>
+        <td><a href="#down_delay">down_delay([delay])</a></td>
+        <td>How long a key stays down when "clicked".</td>
+    </tr>
+    <tr>
+        <td><a href="#click_delay">click_delay([delay])</a></td>
+        <td>How long to pause between key clicks.</td>
+    </tr>
+    <tr>
+        <td><a href="#click">click(key)</a></td>
+        <td>A key to click by id.</td>
+    </tr>
+    <tr>
+        <td><a href="#down">down(key)</a></td>
+        <td>A key to press by id. Don't forget to release it!</td>
+    </tr>
+    <tr>
+        <td><a href="#up">up(key)</a></td>
+        <td>A key to release by id.  Releases keys pressed by "down".</td>
+    </tr>
+    <tr>
+        <td><a href="#type">type(str)</a></td>
+        <td>A string to type.  See detailed description below.</td>
+    </tr>
+    <tr>
+        <td><a href="#interpret_meta_symbols">interpret_meta_symbols(tf)</a></td>
+        <td>Indicates whether to interpret meta symbols in type.</td>
+    </tr>
+    <tr>
+        <td><a href="#print_keycodes">print_keycodes()</a></td>
+        <td>Prints X11 keycodes to the console.</td>
+    </tr>
+    <tr>
+        <td><a href="#capslock">capslock([tf])</a></td>
+        <td>Turns caps lock on or off and returns status.</td>
+    </tr>
+    <tr>
+        <td><a href="#numlock">numlock([tf])</a></td>
+        <td>Turns num lock on or off and returns status.</td>
+    </tr>
+    <tr>
+        <td class="bottom"><a href="#scroll_lock">scroll_lock([tf])</a></td>
+        <td class="bottom">Turns scroll lock on or off and returns status.</td>
+    </tr>
+    </table>
+</div>
+<div class="command" id="down_delay">
+    <div class="section desc">
+        <h3><a name="down_delay">Function:</a></h3>
+        <p class="function">down_delay([delay])</p>
+        <p class="description">
+        Sets the value for how long the keyboard key stays down when "clicked"
+        in milliseconds. Default is 10 milliseconds which usually works with
+        most applications. Note that 0 rarely works.  If you are trying to
+        get a big speed boost and are getting surprising results, try
+        changing this to 1. Does not make any changes if delay is less than
+        zero or is omitted.</p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">delay</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">The delay in milliseconds</td>
+        </tr>
+        </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        The current delay which may or may not have changed.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Change the down delay to 20 ms
+import xaut
+kbd = xaut.keyboard()
+delay = kbd.down_delay(20)
+print(delay) #Prints "20"</pre>
+<pre class="example_code">#Find current delay without making changes
+import xaut
+kbd = xaut.keyboard()
+delay = kbd.down_delay()
+print(delay) #Prints current delay</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="click_delay">
+    <div class="section desc">
+        <h3><a name="click_delay">Function:</a></h3>
+        <p class="function">click_delay([delay])</p>
+        <p class="description">
+        How much time elapses between key clicks when "typing" in
+        milliseconds. Default is 5 milliseconds, and usually works with
+        most applications. Note that 0 rarely works.  If you are trying to
+        get a big speed boost and are getting surprising results, try
+        changing this to 1. Does not make any changes if delay is less than
+        zero or is omitted.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+            <tr class="parameter">
+            <td class="name bottom">delay</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">The delay in milliseconds</td>
+        </tr>
+        </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        The current delay which may or may not have changed.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">#Change the click delay to 10 ms
+import xaut
+kbd = xaut.keyboard()
+delay = kbd.click_delay(10)
+print(delay) #Prints "10"</pre>
+<pre class="example_code">#Find the current delay without making any changes
+import xaut
+kbd = xaut.keyboard()
+delay = kbd.click_delay()
+print(delay) #Prints current delay</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="click">
+    <div class="section desc">
+        <h3><a name="click">Function:</a></h3>
+        <p class="function">click(key)</p>
+        <p class="description">
+            Simulates pressing down and releasing a key by key code.
+            Use print_keycodes() to get a listing of valid key codes.  Use
+            one of the values from the column labeled <em>Code</em> as
+            a parameter.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">key</td>
+            <td class="req bottom">yes</td>
+            <td class="desc bottom">The keycode of the key to click</td>
+        </tr>
+        </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        <p>
+        Non-zero value of call succeeds, zero otherwise.
+        </p>
+        <p>
+        Be cautious, "succeeds" in this context doesn't necessarily mean that
+        your application received the keycode.  It means that X11 did not
+        report any errors or throw any exceptions.
+        </p>
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">import xaut
+kbd = xaut.keyboard()
+success = kbd.click(36) #Sends the Return key
+if(success):
+    print("X11 reports that the keycode 36 was sent")
+else:
+    print("X11 reported an error when sending keycode 36")</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="down">
+    <div class="section desc">
+        <h3><a name="down">Function:</a></h3>
+        <p class="function">down(key)</p>
+        <p class="description">
+            Simulates pressing down the key by key code.
+            Use print_keycodes() to get a listing of valid key codes.
+            This function would be useful if it is necessary to press
+            a key combination that does not involve one of the meta
+            keys.  For example, this function can simultaneously press
+            down the "a" and "b" key.  You <em>must</em> release the
+            key manually.
+       </p>
+       <p class="description">
+            Note that the key usually releases by itself when the calling
+            program terminates - but this is not guaranteed (at least not by
+            me).
+       </p>
+       <p class="description">
+            Use print_keycodes() to get a listing of valid keycodes.  Use
+            one of the values from the column labeled <em>Code</em> as
+            a parameter.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">key</td>
+            <td class="req bottom">yes</td>
+            <td class="desc bottom">The key code of the key to press down.</td>
+        </tr>
+    </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        <p>
+        Non-zero value of call succeeds, zero otherwise.
+        </p><p>
+        Be cautious, "succeeds" in this context doesn't necessarily mean that
+        your application received the keycode.  It means that X11 did not
+        report any errors or throw any exceptions.
+        </p>
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">import xaut
+import time
+kbd = xaut.keyboard()
+kbd.down(38) #Press down the "a" key
+kbd.down(56) #Press down the "b" key
+time.sleep(.1)
+kbd.up(56) #Release the "b" key
+kbd.up(38) #Release the "a" key</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="up">
+    <div class="section desc">
+        <h3><a name="up">Function:</a></h3>
+        <p class="function">up(key)</p>
+        <p class="description">
+            Releases a key previously presed down.
+            Note that this will not release an actual key, only a simulated
+            key.  Calling key_up without first calling key_down may or may not
+            work, and may have "interesting" side effects.  Fair warning.
+       </p>
+       <p class="description">
+            Use print_keycodes() to get a listing of valid keycodes.  Use
+            one of the values from the column labeled <em>Code</em> as
+            a parameter.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">key</td>
+            <td class="req bottom">yes</td>
+            <td class="desc bottom">The key code which should have been previously pressed "down"</td>
+        </tr>
+    </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        <p>
+        Non-zero value of call succeeds, zero otherwise.
+        </p>
+        <p>
+        Be cautious, "succeeds" in this context doesn't necessarily mean that
+        your application received the keycode.  It means that X11 did not
+        report any errors or throw any exceptions.
+        </p>
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+        <pre class="example_code">import xaut
+import time
+kbd = xaut.keyboard()
+kbd.down(38) #Press down the "a" key
+kbd.down(56) #Press down the "b" key
+time.sleep(.1)
+kbd.up(56) #Release the "b" key
+kbd.up(38) #Release the "a" key</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="type">
+    <div class="section desc">
+        <h3><a name="type">Function:</a></h3>
+        <p class="function">type(str)</p>
+        <p class="description">
+            Sends the sequence of characters in the string parameter.
+            Note that there are a number of rules to keep in mind:
+        </p>
+        <ol>
+        <li>Only valid characters are sent.  So for example, character 7
+        (the bell) cannot be sent.</li>
+
+        <li>The braces {} signify a special key code.  The code contained
+        inside must correspond to a X11 key symbol name string.  The brace
+        can also contain a number, which indicates the number of times to
+        press the key.  E.g. {Tab} presses the tab key.  {Tab&nbsp;3} presses
+        the tab key three times.  Use <code>print_keycodes()</code> to get a listing
+        of valid keycodes.  You will want to use a value from the
+        column called <em>X11 key symbol name string</em>.  The symbols
+        are case sensitive - they must match what is printed <em>exactly</em>.</li>
+
+        <li>Note that all valid X11 codes are valid inside braces.</li>
+
+        <li>The exclamation point (!) signifies press the alt key for the next
+        letter.  So <code>type("!a")</code> would press the alt key down, then press
+        and release the a key, and then finally release the alt key.</li>
+
+        <li>The plus sign (+) signifies press the shift key for the next
+        letter - similar to alt.  So <code>type("+a")</code> would press down
+        the shift key down, press and release the a key, and then finally release
+        the shift key.</li>
+
+        <li>The carat - or circumflex - (^) signifies press the control key
+        for the next letter - similar to shift and alt.  So <code>type("^a")</code> would
+        press the control key, then press and release the a key, and then finally
+        release the control key.</li>
+
+        <li>The number sign - or pound symbol - (#) signifies press the meta key
+        for the next letter - similar to shift, control, and alt.  So <code>type("#a")</code>
+        would press the meta key, then press and release the a key, and then finally
+        release the meta key.  Note that the "meta" key is sometimes named after
+        a certain software company :)</li>
+
+        <li>The previous special keys can be combined.  So <code>type("+^#!a")</code> would
+        press and hold down the shift, control, meta, and alt keys, press and release the
+        a, and then release the alt, meta, control, and shift keys.</li>
+
+        <li>Use the string name for a key if you wish to send a literal !, +, or ^.
+        E.g. {exclam}{plus}{asciicircum} would send !+^ .</li>
+
+        <li>Sending upper case letters as well as many symbols actually cause a
+        shift and letter/symbol, e.g. A and +a are the same.  For this reason,
+        one should use lower case letters in combination with control keys
+        to avoid confusion.  ^a is not the same as ^A - ^A is precisely
+        the same as ^+a .</li>
+
+        <li>Invalid characters encountered (if any) are printed to the error
+        stream and then ignored.</li>
+
+        <li>Modifier keys (alt, control, and shift) are released after each
+        keycode in a brace, and after the next letter when not in a brace.
+        If you wish to use multiple letters in combination with modifier keys,
+        you'll need to construct the correct sequence yourself using the
+        correct codes and the <code>down()</code> and <code>up()</code> functions.</li>
+
+        <li>You can set "interpret_meta_symbols" to false, which will cause
+        the string to be sent literally.  See
+        <a href="#interpret_meta_symbols">interpret_meta_symbols</a> for more
+        information.
+
+        </ol>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">str</td>
+            <td class="req bottom">yes</td>
+            <td class="desc bottom">The string to send</td>
+        </tr>
+    </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        <p>
+        Non-zero value if call succeeds, zero otherwise.
+        </p>
+        <p>
+        Be cautious, "succeeds" in this context doesn't necessarily mean that
+        your application received the keycode.  It means that X11 did not
+        report any errors or throw any exceptions.
+        </p>
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">import xaut
+kbd = xaut.keyboard()
+kbd.type("This is a test{Return}")
+kbd.type("!fa") #Opens the "Save As" dialog in some editors</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="interpret_meta_symbols">
+    <div class="section desc">
+        <h3><a name="interpret_meta_symbols">Function:</a></h3>
+        <p class="function">interpret_meta_symbols(tf)</p>
+        <p class="description">
+            A way to tell the program whether to interpret meta symbols.
+            If the text to be typed contains meta symbols (!#^+{}),
+            and you want those symbols sent as opposed to interpreted,
+            then set this to FALSE.  Otherwise set this to TRUE - this
+            is the default.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">tf</td>
+            <td class="req bottom">yes</td>
+            <td class="desc bottom">0 tells xaut to send meta symbols as opposed to
+            interpreting them, any non-zero value means interpret.</td>
+        </tr>
+        </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        (none)
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">import xaut
+import time
+kbd = xaut.keyboard()
+kbd.type("!f") #Sends the alt + f keys
+time.sleep(3)
+kbd.type("{Escape}")
+time.sleep(3)
+kbd.interpret_meta_symbols(0)
+kbd.type("!f") #Literally sends !f</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="print_keycodes">
+    <div class="section desc">
+        <h3><a name="print_keycodes">Function:</a></h3>
+        <p class="function">print_keycodes()</p>
+        <p class="description">
+            Prints out a listing of valid keycodes to the local console.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        (none)
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        (none)
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code">import xaut
+kbd = xaut.keyboard()
+kbd.print_keycodes() #Prints out a listing of keycodes</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="capslock">
+    <div class="section desc">
+        <h3><a name="capslock">Function:</a></h3>
+        <p class="function">capslock([tf])</p>
+        <p class="description">
+            Can be used to turn caps lock on or off.  Returns the status
+            of caps lock.  The keyboard light is aligned with the state that
+            you set - even if it wasn't before calling the routine.  However, xaut
+            may not correctly detect keyboard state if the keyboard light and the
+            status are not the same.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">tf</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">0 tells xaut to clear caps lock,  -1 or no parameter
+            tells xaut to make no changes, and 1 tells xaut to set caps lock.</td>
+        </tr>
+        </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        0 if caps lock is off after the call to the routine, 1 if it is on.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code"># Find current state of caps lock key
+import xaut
+kbd = xaut.keyboard()
+state = kbd.capslock() # Note that I supplied no parameters
+print(state)</pre>
+<pre class="example_code"># Find current state of caps lock key
+import xaut
+kbd = xaut.keyboard()
+state = kbd.capslock(-1) # Note that '-1' is the parameter
+print(state)
+</pre>
+<pre class="example_code"># Set caps lock on
+import xaut
+kbd = xaut.keyboard()
+state = kbd.capslock(1)
+print(state) # Prints '1'</pre>
+<pre class="example_code"># Set caps lock off
+import xaut
+kbd = xaut.keyboard()
+state = kbd.capslock(0)
+print(state) # Prints '0'</pre>
+<pre class="example_code"># An example of changing and restoring state
+import xaut
+kbd = xaut.keyboard()
+orig = kbd.capslock()
+if orig:
+    print("Start with caps lock on")
+else:
+    print("Start with caps lock off")
+state = kbd.capslock(1) # Caps lock on
+print(state)
+state = kbd.capslock(0) # Caps lock off
+print(state)
+state = kbd.capslock(orig)
+if state:
+    print("Finish with caps lock on")
+else:
+    print("Finish with caps lock off")</pre>
+<pre class="example_code"># An example of mixed up keyboard status
+# Be sure your caps lock is OFF for this test...
+import xaut
+kbd = xaut.keyboard()
+kbd.type("{Caps_Lock}") # Caps lock is ON, but the light is OFF
+state = kbd.capslock()
+print(state) # State incorrectly has the value '0'
+state = kbd.capslock(1)
+print(state) # Caps lock is ON and the light is ON
+state = kbd.capslock(0)
+print(state) # Caps lock is OFF and the light is OFF
+</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="numlock">
+    <div class="section desc">
+        <h3><a name="numlock">Function:</a></h3>
+        <p class="function">numlock([tf])</p>
+        <p class="description">
+            Can be used to turn num lock on or off.  Returns the status
+            of num lock.  The keyboard light is aligned with the state that
+            you set - even if it wasn't before calling the routine.  However, xaut
+            may not correctly detect keyboard state if the keyboard light and the
+            status are not the same.
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">tf</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">0 tells xaut to clear num lock,  -1 or no parameter
+            tells xaut to make no changes, and 1 tells xaut to set num lock.</td>
+        </tr>
+        </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        0 if num lock is off after the call to the routine, 1 if it is on.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code"># Find current state of num lock key
+import xaut
+kbd = xaut.keyboard()
+state = kbd.numlock() # Note that I supplied no parameters
+print(state)</pre>
+<pre class="example_code"># Find current state of num lock key
+import xaut
+kbd = xaut.keyboard()
+state = kbd.numlock(-1) # Note that '-1' is the parameter
+print(state)
+</pre>
+<pre class="example_code"># Set num lock on
+import xaut
+kbd = xaut.keyboard()
+state = kbd.numlock(1)
+print(state) # Prints '1'</pre>
+<pre class="example_code"># Set num lock off
+import xaut
+kbd = xaut.keyboard()
+state = kbd.numlock(0)
+print(state) # Prints '0'</pre>
+<pre class="example_code"># An example of changing and restoring state
+import xaut
+kbd = xaut.keyboard()
+orig = kbd.numlock()
+if orig:
+    print("Start with num lock on")
+else:
+    print("Start with num lock off")
+state = kbd.numlock(1) # Num lock on
+print(state)
+state = kbd.numlock(0) # Num lock off
+print(state)
+state = kbd.numlock(orig)
+if state:
+    print("Finish with num lock on")
+else:
+    print("Finish with num lock off")</pre>
+<pre class="example_code"># An example of mixed up keyboard status
+# Be sure your num lock is OFF for this test...
+import xaut
+kbd = xaut.keyboard()
+kbd.type("{Num_Lock}") # num lock is ON, but the light is OFF
+state = kbd.numlock()
+print(state) # State incorrectly has the value '0'
+state = kbd.numlock(1)
+print(state) # Num lock is ON and the light is ON
+state = kbd.numlock(0)
+print(state) # Num lock is OFF and the light is OFF
+</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+<div class="command" id="scroll_lock">
+    <div class="section desc">
+        <h3><a name="scroll_lock">Function:</a></h3>
+        <p class="function">scroll_lock([tf])</p>
+        <p class="description">
+            Can be used to turn scroll lock on or off.  Returns the status
+            of scroll lock.  The keyboard light is aligned with the state that
+            you set - even if it wasn't before calling the routine.  However, xaut
+            may not correctly detect keyboard state if the keyboard light and the
+            status are not the same.
+        </p>
+        <p class="description">
+            Note that scroll lock may or may not work with your programs, and is
+            here for completeness sake only.  I suggest you avoid using scroll lock
+            functionality unless you understand the consequences of having scroll
+            lock set on your computer.
+        </p>
+        <p class="description">
+            Note also that "scroll_lock" has an underbar in its name.  There are
+            two reasons for that: 1) Because it would invite errors to have a command
+            that contains "lll" - it's better to be ll_l, and 2) It further impresses the
+            point that scroll lock is an oddball command compared to the others
+            (caps lock and num lock).
+        </p>
+    </div>
+    <div class="section params">
+        <h3>Parameters:</h3>
+        <table class="param_table">
+        <tr><th>Param</th><th>Req</th><th>Description</th></tr>
+        <tr class="parameter">
+            <td class="name bottom">tf</td>
+            <td class="req bottom">no</td>
+            <td class="desc bottom">0 tells xaut to clear scroll lock,  -1 or no parameter
+            tells xaut to make no changes, and 1 tells xaut to set scroll lock.</td>
+        </tr>
+        </table>
+    </div>
+    <div class="section return">
+        <h3>Return Value:</h3>
+        0 if scroll lock is off after the call to the routine, 1 if it is on.
+    </div>
+    <div class="section example">
+        <h3>Example(s):</h3>
+<pre class="example_code"># Find current state of scroll lock key
+import xaut
+kbd = xaut.keyboard()
+state = kbd.scroll_lock() # Note that I supplied no parameters
+print(state)</pre>
+<pre class="example_code"># Find current state of scroll lock key
+import xaut
+kbd = xaut.keyboard()
+state = kbd.scroll_lock(-1) # Note that '-1' is the parameter
+print(state)
+</pre>
+<pre class="example_code"># Set scroll lock on
+import xaut
+kbd = xaut.keyboard()
+state = kbd.scroll_lock(1)
+print(state) # Prints '1'</pre>
+<pre class="example_code"># Set scroll lock off
+import xaut
+kbd = xaut.keyboard()
+state = kbd.scroll_lock(0)
+print(state) # Prints '0'</pre>
+<pre class="example_code"># An example of changing and restoring state
+import xaut
+kbd = xaut.keyboard()
+orig = kbd.scroll_lock()
+if orig:
+    print("Start with scroll lock on")
+else:
+    print("Start with scroll lock off")
+state = kbd.scroll_lock(1) # Scroll lock on
+print(state)
+state = kbd.scroll_lock(0) # Scroll lock off
+print(state)
+state = kbd.scroll_lock(orig)
+if state:
+    print("Finish with scroll lock on")
+else:
+    print("Finish with scroll lock off")</pre>
+<pre class="example_code"># An example of mixed up keyboard status
+# Be sure your scroll lock is OFF for this test...
+import xaut
+kbd = xaut.keyboard()
+kbd.type("{Scroll_Lock}") # scroll lock is ON, but the light is OFF
+state = kbd.scroll_lock()
+print(state) # State incorrectly has the value '0'
+state = kbd.scroll_lock(1)
+print(state) # Scroll lock is ON and the light is ON
+state = kbd.scroll_lock(0)
+print(state) # Scroll lock is OFF and the light is OFF
+</pre>
+    </div>
+    <div class="nav">
+        <a href="#">Top of document</a>
+        <a href="index.html">Index Page</a>
+    </div>
+</div>
+
+</div><!-- /content -->
+<div id="footer">
+Click the image to go to the download page.&nbsp;
+<a href="http://sourceforge.net/projects/xautomation">
+    <img src="http://sflogo.sourceforge.net/sflogo.php?group_id=255010&amp;type=15"
+    width="150" height="40"
+    alt="Get X Automation at SourceForge.net. Fast, secure and Free Open Source software downloads"></a>
+</div>
+</div><!-- /container -->
+
+</body>
+</html>

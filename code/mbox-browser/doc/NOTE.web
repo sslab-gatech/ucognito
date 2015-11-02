@@ -1,0 +1,125 @@
+# Mbox
+
+Mbox is a lightweight *sandboxing* mechanism that any user can use *without special
+privileges* in commodity operating systems. 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.bash}
+$ git clone https://github.com/tsgates/mbox
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+## TL;DR
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.bash}
+$ mbox -- wget google.com
+...
+Network Summary:
+ > [11279] -> 173.194.43.51:80
+ > [11279] Create socket(PF_INET,...)
+ > [11279] -> a00::2607:f8b0:4006:803:0
+ ...
+Sandbox Root:
+ > /tmp/sandbox-11275
+ >  N:/tmp/index.html
+[c]ommit, [i]gnore, [d]iff, [l]ist, [s]hell, [q]uit ?> 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+## What 'sandbox' are you talking about?
+
+Mbox introduces a novel sandbox usage model; when executing a program in the
+sandbox, Mbox prevents programs from modifying the host filesystem while giving
+them the impression that they are in fact making those modifications. Mbox
+achieves this by providing a *layered sandbox filesystem* and by *interposing on
+system calls* with ptrace and seccomp/BPF. At the end of program execution, the
+user can examine changes in the sandbox filesystem, and selectively commit them
+back to the host filesystem.
+
+## Under what circumstances can Mbox help?
+
+### Usage 1: Installing packages without root
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.bash}
+ $ mbox -R -- apt-get install git
+  (-R: emulate a fakeroot environment)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+### Usage 2: Running unknown binary safely
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.bash}
+ $ mbox -n -- wget google.com
+  (-n: disable remote network accesses)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+### Usage 3: Checkpointing filesystem
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.bash}
+ $ mbox -i -- sh
+  (-i: enable interactive commit-mode)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+### Usage 4: Build/development environment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.bash}
+ $ mbox -r outdir -- make
+  (-r dir: specify a sandbox filesystem)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+### Usage 5: Profile-based sandbox
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.bash}
+ $ mbox -p build.prof -- ./configure
+  (-p prof: enable profile-based policy)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.yaml}
+## build.prof
+[fs]
+    allow: .
+    hide: ~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+## Packages
+
+I highly recommend you to use the latest version of mbox, but here are
+some easy ways to try mbox.
+
+### Arch
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.bash}
+$ sudo aurget -S mbox-git
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+or
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.bash}
+$ wget http://pdos.csail.mit.edu/mbox/mbox-latest-x86_64.pkg.tar.xz
+$ sudo pacman -U mbox-latest-x86_64.pkg.tar.xz
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+### Debian
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.bash}
+$ wget http://pdos.csail.mit.edu/mbox/mbox-latest-amd64.deb
+$ sudo dpkg -i mbox-latest-amd64.deb
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Here is a list of available options.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.bash}
+$ mbox -h
+usage: mbox [-r root] [-s] [PROG]
+        ...
+        -m      : keep md5 of original files
+        -c      : count time, calls, and errors for each syscall and report summary
+        -d      : enable syscall trace to stderr
+        -D      : enable debug
+        -p file : load profile (see. NOTE.profile)
+        -t      : run as unit tester (check pre/post condition, see tests-sbox/NOTE)
+        -n      : disable network accesses
+        -S      : enable nested seccomp
+        -i      : disable interactive session at the end
+        -s      : use seccomp instead of ptrace
+        -R      : fakeroot
+        -C path : change directory
+        -r path : sandbox root (default:/tmp/sandbox-)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+## NOTE.
+
+- [Paper](http://pdos.csail.mit.edu/~taesoo/pubs/2013/mbox/mbox.pdf)
+- [Slides](http://pdos.csail.mit.edu/~taesoo/pubs/2013/mbox/mbox-slides.pdf)

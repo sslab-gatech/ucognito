@@ -1,0 +1,11 @@
+#!/bin/bash
+
+. ./settings.sh
+
+PID=$(ps -o pid -C firefox | tail -1 | xargs)
+
+strace -p $PID -o $TRACE_LOG -s 1024 -f -v -e trace=$STRACE_SET &
+S_PID=$!
+
+sleep 12
+kill $S_PID

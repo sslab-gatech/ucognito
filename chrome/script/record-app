@@ -1,0 +1,22 @@
+#!/bin/bash
+
+. ./settings.sh
+
+# start app with new profile
+rm -rf $PROFILE_PBTEST
+cp -r $PROFILE_EMPTY $PROFILE_PBTEST
+strace -o $TRACE_LOG -f -v -e trace=$STRACE_SET $CHROME_BIN --user-data-dir=$PROFILE_PBTEST --app-id=$1 1>/dev/null 2>&1 &
+S_PID=$!
+sleep $CHROME_LAUNCH_TIME
+
+sleep $WEBPAGE_LOAD_TIME
+wmctrl -c "Google Chrome"
+sleep $LOG_BUFFERING_TIME
+
+# stop strace, copy log and profile dir
+kill $S_PID
+cp $TRACE_LOG $TRACE_LOG-$1
+cp -r $PROFILE_PBTEST $PROFILE_DIR/p-$1
+
+rm -r $PROFILE_PBTEST
+

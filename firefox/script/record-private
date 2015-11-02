@@ -1,0 +1,31 @@
+#!/bin/bash
+
+. ./settings.sh
+
+# start browser with new profile
+rm -rf $PROFILE_PBTEST
+cp -r $PROFILE_EMPTY $PROFILE_PBTEST
+strace -o $TRACE_LOG -f -v -e trace=$STRACE_SET $FIREFOX_BIN -browser -profile $PROFILE_PBTEST 1>/dev/null 2>&1 &
+S_PID=$!
+sleep $FIREFOX_LAUNCH_TIME
+wmctrl -r "Mozilla Firefox" -N "Main Window"
+
+# copy the start-up log and profile dir
+cp $TRACE_LOG $TRACE_LOG-$2-s0
+cp -r $PROFILE_PBTEST $PROFILE_DIR/p-$2-s0
+
+# visit website in private mode
+$FIREFOX_BIN -private-window $1 1>/dev/null 2>&1 &
+sleep $WEBPAGE_LOAD_TIME
+wmctrl -c "Private Browsing"
+sleep $LOG_BUFFERING_TIME
+
+# stop strace, copy log and profile dir
+kill $S_PID
+cp $TRACE_LOG $TRACE_LOG-$2-s1
+cp -r $PROFILE_PBTEST $PROFILE_DIR/p-$2-s1
+
+# stop firefox, clearup used profile
+wmctrl -c "Main Window"
+rm -r $PROFILE_PBTEST
+

@@ -1,0 +1,39 @@
+							Firefox	 	Chrome (i)		Chrome (g)		Opera
+save new history			x			x				x				x
+load existing history		v			v				x				v
+
+save new audofills			x			x				x				x
+load existing autofills		v			v				x				v		
+
+save new cookies			x			x				x				x	
+load existing cookies		x			x				x				x
+
+save new cache				x			x				x				x
+load existing cache			x			x				x				x
+
+save new bookmarks			v			v				x				v
+load existing bookmarks		v			v				x				v
+
+save new downloads			x			x				x				x
+load existing downloads		x			v				x				v	
+
+Notes:
+Chrome (i) = incognito mode
+Chrome (g) = guest mode
+
+by new download, I mean the entry in the download list, not the actual file downloaded
+
+In fact:
+normal mode + MBox = guest mode
+normal mode + MBox + policy = incognito mode
+
+guest mode ==> strongest protection
+	1) nothing is saved for guest mode browsing session 
+	2) previous activities does not have an impact on guest mode browsing
+
+incognito mode ==> weaker protection
+	only 1) is achieved, nothing is saved for incognito mode browsing session
+
+But in our paper, we can define "universal incognito" mode as a configurable mode
+with basic protection same as guest mode and can be customized to provide various
+level of protections as defined in Firefox/Chrome/Opera's incognito modes.

@@ -1,0 +1,60 @@
+This is a demo for UCognito - a Universal inCognito mode implementation
+
+1. Preparation
+
+- define a place to hold firefox profiles
+
+export PROFILE=~/demo/firefox/profile
+
+2. Control what to be loaded in ucognito session
+
+- start with an empty firefox profile
+
+rm -r $PROFILE
+firefox -CreateProfile "demo $PROFILE"
+
+- create config file
+
+cat >profile.cfg <<EOF
+[clean]
+~/
+[copy]
+$PROFILE/places.sqlite
+EOF
+
+- browse in public mode, confirm history and cookies are generated
+
+firefox -browser -profile $PROFILE
+
+- browse in ucognito mode, confirm only history are visible, not cookies
+
+ucognito -P profile.cfg -- firefox -browser -profile $PROFILE
+
+- browse in public mode again, confirm history and cookies are still there
+
+firefox -browser -profile $PROFILE
+
+3. Control what to be stored after ucognito session
+
+- start with an empty firefox profile
+
+rm -r $PROFILE
+firefox -CreateProfile "demo $PROFILE"
+
+- create config file
+
+cat >profile.cfg <<EOF
+[clean]
+~/
+[write]
+$PROFILE/places.sqlite
+EOF
+
+- browse in ucognito mode, confirm history and cookies are generated
+
+ucognito -P profile.cfg -- firefox -browser -profile $PROFILE
+
+- browse in public mode, confirm only history is visible, not cookies
+
+firefox -browser -profile $PROFILE
+

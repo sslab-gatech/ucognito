@@ -1,0 +1,74 @@
+# @configure_input@
+
+# $URL: https://xautomation.svn.sourceforge.net/svnroot/xautomation/trunk/src/Makefile.in $
+# $Author: chris_parker $
+# $Date: 2012-08-19 14:04:53 -0700 (Sun, 19 Aug 2012) $
+# $Rev: 28 $
+
+srcdir  = @srcdir@
+VPATH   = @srcdir@
+package = @PACKAGE_NAME@
+version = @PACKAGE_VERSION@
+
+CC = @CC@
+CFLAGS = -Wall -fPIC -fno-stack-protector
+LIBFLAGS = -c
+DBGFLAGS = -g
+
+LOCAL_PYTHON_VERSION = @LOCAL_PYTHON_VERSION@
+
+# Not sure how portable this is - see http://www.linuxquestions.org/questions/programming-9/how-can-make-makefile-detect-64-bit-os-679513/
+LBITS := $(shell getconf LONG_BIT)
+ifeq ($(LBITS),64)
+	LIBDIR = $(shell \
+	    (test -d /usr/lib64 && echo /usr/lib64) || \
+	    (test -d /usr/lib/x86_64-linux-gnu && echo /usr/lib/x86_64-linux-gnu) || \
+	echo LIB_64_directory_not_found)
+else
+	LIBDIR = $(shell \
+	    (test -d /usr/lib/i386-linux-gnu && echo /usr/lib/i386-linux-gnu) || \
+	    (test -d /usr/lib/arm-linux-gnueabihf && echo /usr/lib/arm-linux-gnueabihf) || \
+		(test -d /usr/lib && echo /usr/lib) || \
+	echo LIB_dir_not_found)
+endif
+
+#User should not be here, but I don't want this to fail
+user_error:
+	@echo "*** Running the default package in the parent directory ***"
+	@echo
+	@$(MAKE) -C ..
+
+cleanup: clean_lib
+
+clean_lib:
+	@-rm -f *.o
+
+#Compile the source code - DO NOT COMPILE "main.c" - that is a separate test executable
+build:
+	swig -python xautpy.i
+	rm xautpy.py
+	$(CC) $(CFLAGS) $(LIBFLAGS) \
+	$(srcdir)/xaut.c $(srcdir)/xaut_display.c $(srcdir)/xaut_keyboard.c \
+	$(srcdir)/xaut_mouse.c $(srcdir)/xaut_window.c $(srcdir)/xautpy_wrap.c \
+	$(srcdir)/xaut_clipboard.c \
+	-I/usr/include/python$(LOCAL_PYTHON_VERSION)/ -I/usr/include/X11/ \
+	-DHAVE_CONFIG_H -DEN_US -DLESS_THAN_FIX
+
+build_test:
+	$(CC) $(CFLAGS) $(DBGFLAGS) \
+	$(srcdir)/xaut.c $(srcdir)/xaut_display.c $(srcdir)/xaut_keyboard.c \
+	$(srcdir)/xaut_mouse.c $(srcdir)/xaut_window.c $(srcdir)/main.c \
+	$(srcdir)/xaut_clipboard.c \
+	-I/usr/include/python$(LOCAL_PYTHON_VERSION)/ -I/usr/include/X11/ \
+	-lX11 -lXtst \
+	-DHAVE_CONFIG_H -DEN_US -DLESS_THAN_FIX \
+	-o $(package)_test
+
+
+#Link the shared library for the Python module
+link:
+	ld -shared $(srcdir)/xaut.o $(srcdir)/xaut_display.o \
+	$(srcdir)/xaut_keyboard.o $(srcdir)/xaut_mouse.o $(srcdir)/xaut_window.o \
+	$(srcdir)/xautpy_wrap.o $(srcdir)/xaut_clipboard.o \
+	$(LIBDIR)/libX11.so $(LIBDIR)/libXtst.so -o \
+	_$(package)py.so

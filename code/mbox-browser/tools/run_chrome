@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+
+chromes = [`which google-chrome`.strip, `which chrome`.strip,
+           `which chromium-browser`.strip]
+
+real_chromes = chromes.select {|x| x != nil && x.length > 0}
+
+real_chromes.map! do |path|
+  if File.symlink? path
+    require 'pathname'
+    path = Pathname.new(path).realpath
+    path.to_s
+  else
+    path
+  end
+
+end
+
+
+if real_chromes == nil || real_chromes.length == 0
+  puts "ERROR: Neither Google Chrome nor Chromium Browser found on the system!"
+  exit
+end
+
+cmd = "mbox -s #{ARGV.join ' '} -- #{real_chromes[0]}" +
+" --disable-setuid-sandbox --disable-namespace-sandbox" #--disable-seccomp-sandbox"
+
+puts "Running command: #{cmd.inspect}"
+sleep 1
+system cmd

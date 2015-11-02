@@ -1,0 +1,6 @@
+#!/bin/bash
+
+. ./settings.sh
+
+cp -r $PROFILE_EMPTY $PROFILE_PBTEST
+$FIREFOX_BIN -browser -profile $PROFILE_PBTEST 1>/dev/null 2>&1 &

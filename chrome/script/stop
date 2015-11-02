@@ -1,0 +1,11 @@
+#!/bin/bash
+
+. ./settings.sh
+
+#PID=$(ps -o pid -C chrome | tail -1 | xargs)
+#kill -SIGTERM $PID
+
+wmctrl -c "Google Chrome"
+
+sleep 1
+rm -r $PROFILE_PBTEST

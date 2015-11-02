@@ -1,0 +1,13 @@
+a
+cat: a_subdir/b: No such file or directory
+c
+cat: a_subdir/d: No such file or directory
+e
+1
+2
+3
+cat: a_subdir/capdir/A: No such file or directory
+cat: a_subdir/capdir/B: No such file or directory
+cat: a_subdir/capdir/C: No such file or directory
+b_content
+
